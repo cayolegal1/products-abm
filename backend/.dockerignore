@@ -1,0 +1,17 @@
+postgres-data/
+.env
+*.pyc
+*.mo
+*.db
+*.css.map
+.cache
+.sass-cache
+.idea
+.vagrant
+.git
+.DS_Store
+__pycache__
+
+**/node_modules
+cities
+marina_images

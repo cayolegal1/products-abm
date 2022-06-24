@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+  web:
+    depends_on:
+      - postgres
+      - redis
+  postgres:
+    image: postgis/postgis:12-3.2
+  redis:
+    image: redis:5

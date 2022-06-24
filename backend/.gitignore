@@ -1,0 +1,11 @@
+*.pyc
+env/
+.terraform
+.env
+staticfiles/
+mediafiles/
+postgres-data/
+
+cities/
+marinas_pictures/
+static/**/*.jpg
