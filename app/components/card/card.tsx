@@ -17,9 +17,7 @@ const CARD : ViewStyle = {
 };
 const CARD_CONTENT: ViewStyle = {
 
-    //marginHorizontal: 18,
-    //marginVertical: 10
-    marginTop: '10%'
+    margin: '5%'
 };
 
 export const Card = (props: CardProps) => {

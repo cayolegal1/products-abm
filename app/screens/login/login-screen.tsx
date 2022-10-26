@@ -63,8 +63,6 @@ export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "login">> = ob
     ({navigation}) => {
 
         const {user, setUser} : any = useContext(UserGlobalContext);
-        
-        //const [user, setUser] = useState<{name?: string; password?: string}>({name: '', password: ''});
 
         const [error, setError] = useState({isError: false, message: ''});
 
@@ -74,10 +72,39 @@ export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "login">> = ob
             password: user.password
         };
 
+        const customUsers = [
+
+            {
+                name: 'cayolegal',
+                password: 'hola1606',
+                is_admin: true
+            },
+
+            {
+                name: 'guest',
+                password: 'hola1606',
+                is_admin: false
+            },
+
+            {
+                name: 'olivio',
+                password: 'admin123',
+                is_admin: true
+            }
+        ];
+
         const Login = () => {
 
-            if(user.name !== '' && user.password !== '') return navigation.navigate('products', paramInfo);
-            setError({isError: true, message: 'Please provide user and pasword to login'})
+            if(user.name !== '' && user.password !== '') {
+
+                if(customUsers.some(u => u.name === user.name && u.password === user.password)) 
+                  return navigation.navigate('products', paramInfo);
+
+                setUser({});
+                setError({isError: true, message: 'Wrong username or password'});
+                
+            } else setError({isError: true, message: 'Please provide user and pasword to login'});
+
         }
 
         const goBack = () => navigation.goBack();
@@ -120,12 +147,14 @@ export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "login">> = ob
                 {error.isError && <Text style={ERROR_TEXT}>{error.message}</Text>}
 
                 <View style={LOGIN_CONTENT}>
+                    
                     <Button 
                     text='Login'
                     style={LOGIN}
                     textStyle={LOGIN_TEXT}
                     onPress={Login}
                     />
+
                 </View>
 
             </View>

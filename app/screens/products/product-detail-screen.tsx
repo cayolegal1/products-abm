@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import { StackScreenProps } from "@react-navigation/stack"
 import { NavigatorParamList } from "../../navigators"
-import { View, TextStyle, ViewStyle, TouchableOpacity, Image } from 'react-native';
+import { View, ScrollView, Image, TextStyle, ViewStyle, ImageStyle } from 'react-native';
 import {Text, Header, GradientBackground} from '../../components';
 import { observer } from "mobx-react-lite";
 import { spacing, color, typography } from '../../theme';
@@ -20,22 +20,18 @@ const HEADER_TITLE: TextStyle = {
     textAlign: "center",
     letterSpacing: 1.5,
 };
-const CONTAINER: ViewStyle = {
-
-    backgroundColor: color.palette.deepPurple,
-    paddingHorizontal: spacing[4],
-};
 const TEXT: TextStyle = {
     
     color: color.palette.white,
     fontFamily: typography.primary,
-    marginLeft: '5%',
-    textAlign: 'left'
+
 };
 const TEXT_PRODUCT: TextStyle = {
 
     ...TEXT, 
-    marginTop: '10%'
+    marginTop: '10%',
+    marginLeft: '5%',
+    textAlign: 'left'
 }
 
 const IMAGE_CONTAINER: ViewStyle = {
@@ -44,19 +40,43 @@ const IMAGE_CONTAINER: ViewStyle = {
     alignItems: 'center'
 }
 
+const IMAGE: ImageStyle = {
+
+    width: 300,
+    height: 300,
+    borderRadius: 10 
+}
+
+const OTHER_IMAGES_TEXT: TextStyle = {
+
+
+    ...TEXT, 
+    fontWeight: 'bold',
+    marginTop: '10%',
+    textAlign: 'center'
+
+};
+
+const OTHER_IMAGES: ImageStyle = {
+
+    ...IMAGE, 
+    margin: '7%'
+}
+
+
 
 export const ProductDetailScreen: FC<StackScreenProps<NavigatorParamList, "productDetail">> = observer(
 
     ({navigation, route}) => {
 
-        const {name, price, currency, description, image} : any = route.params;
+        const {name, price, currency, description, primaryImage, images} : any = route.params;
 
         const goBack = () => navigation.goBack();
         const logout = () => navigation.navigate('login');
 
         return(
 
-            <View style={FULL}>
+            <ScrollView style={FULL}>
                 
                 <GradientBackground colors={["#422443", "#281b34"]} />
 
@@ -71,23 +91,30 @@ export const ProductDetailScreen: FC<StackScreenProps<NavigatorParamList, "produ
                     onRightPress={logout}
                 />
                 
-                <TouchableOpacity style={IMAGE_CONTAINER}>
+                <View style={IMAGE_CONTAINER}>
                     <Image
-                        style={{
-                        width: 300,
-                        height: 300,
-                        borderRadius: 10 
-                        }}
-                        source={{uri: image}}
+                        style={IMAGE}
+                        source={{uri: primaryImage}}
                     />
-                </TouchableOpacity>
+                </View>
 
                 <Text text={`Description: ${description}`} style={TEXT_PRODUCT} />
                 <Text text={`Actual price: ${price}`} style={TEXT_PRODUCT} />
                 <Text text={`Currency: ${currency}`} style={TEXT_PRODUCT} />
 
+                <Text text={`Other Images`} style={OTHER_IMAGES_TEXT} />
 
-            </View>
+                {images.map(image => 
+
+                    <View key={image} style={IMAGE_CONTAINER}>
+                        <Image
+                            style={OTHER_IMAGES}
+                            source={{uri: image}}
+                        />
+                    </View>
+                )}
+
+            </ScrollView>
         )
     }
 )
