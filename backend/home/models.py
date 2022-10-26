@@ -1,3 +1,5 @@
+from random import choices
+from unittest.util import _MAX_LENGTH
 from django.conf import settings
 from django.db import models
 from model_utils.models import TimeStampedModel, SoftDeletableModel
@@ -39,3 +41,22 @@ class Feedback(models.Model):
 
     def __str__(self):
         return '{} - {}'.format(self.pk, self.user.username)
+
+
+class Product(models.Model):
+
+    product_state_choices = [
+
+        ("EN STOCK", "En stock"),
+        ("SIN STOCK", "Sin stock")
+    ]
+
+    Codigo = models.CharField(unique=True, max_length=500)
+    Descripcion = models.TextField()
+    Estado = models.CharField(choices=product_state_choices, max_length=15)
+    Imagenes = models.ImageField(upload_to='product-images')
+
+    def __str__(self) -> str:
+        return super().__str__()
+
+

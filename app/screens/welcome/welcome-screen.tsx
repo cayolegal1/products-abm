@@ -15,7 +15,7 @@ import { NavigatorParamList } from "../../navigators"
 
 const bowserLogo = require("./bowser.png")
 
-const FULL: ViewStyle = { flex: 1 }
+const FULL: ViewStyle = { flex: 1, backgroundColor:'red' }
 const CONTAINER: ViewStyle = {
   backgroundColor: color.transparent,
   paddingHorizontal: spacing[4],
@@ -87,10 +87,13 @@ const FOOTER_CONTENT: ViewStyle = {
 }
 
 export const WelcomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = observer(
+
   ({ navigation }) => {
-    const nextScreen = () => navigation.navigate("demo")
+
+    const nextScreen = () => navigation.navigate("login")
 
     return (
+
       <View testID="WelcomeScreen" style={FULL}>
         <GradientBackground colors={["#422443", "#281b34"]} />
         <Screen style={CONTAINER} preset="scroll" backgroundColor={color.transparent}>
@@ -117,7 +120,7 @@ export const WelcomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> 
               testID="next-screen-button"
               style={CONTINUE}
               textStyle={CONTINUE_TEXT}
-              tx="welcomeScreen.continue"
+              text='Log into your account'
               onPress={nextScreen}
             />
           </View>

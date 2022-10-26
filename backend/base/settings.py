@@ -41,6 +41,7 @@ SECURE_SSL_REDIRECT = env.bool("SECURE_REDIRECT", default=False)
 # Application definition
 
 INSTALLED_APPS = [
+    'home',
     'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -51,7 +52,7 @@ INSTALLED_APPS = [
     'django.contrib.sites'
 ]
 LOCAL_APPS = [
-    'home',
+    #'home',
     'users.apps.UsersConfig',
 ]
 THIRD_PARTY_APPS = [

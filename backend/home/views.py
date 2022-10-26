@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import HttpResponse, render
+from home.models import Product
 
 
 def home(request):
@@ -11,3 +12,8 @@ def home(request):
         'packages': packages
     }
     return render(request, 'home/index.html', context)
+
+
+
+def list_products(request):
+    return HttpResponse(Product.objects.all())

@@ -19,7 +19,7 @@ const ROOT: ViewStyle = {
 const TITLE: TextStyle = { textAlign: "center" }
 const TITLE_MIDDLE: ViewStyle = { flex: 1, justifyContent: "center" }
 const LEFT: ViewStyle = { width: 32 }
-const RIGHT: ViewStyle = { width: 32 }
+const RIGHT: ViewStyle = { width: 10 }
 
 /**
  * Header that appears on many screens. Will hold navigation buttons and screen title.

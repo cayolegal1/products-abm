@@ -16,9 +16,15 @@ import { SafeAreaProvider, initialWindowMetrics } from "react-native-safe-area-c
 import { initFonts } from "./theme/fonts" // expo
 import * as storage from "./utils/storage"
 import { AppNavigator, useNavigationPersistence } from "./navigators"
-import { RootStore, RootStoreProvider, setupRootStore } from "./models"
+import { RootStore, RootStoreProvider, setupRootStore, UserGlobalContext } from "./models"
 import { ToggleStorybook } from "../storybook/toggle-storybook"
 import { ErrorBoundary } from "./screens/error/error-boundary"
+
+interface AppContextInterface {
+  name: string;
+  author: string;
+  url: string;
+}
 
 // This puts screens in a native ViewController or Activity. If you want fully native
 // stack navigation, use `createNativeStackNavigator` in place of `createStackNavigator`:
@@ -29,8 +35,12 @@ export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
 /**
  * This is the root component of our app.
  */
-function App() {
-  const [rootStore, setRootStore] = useState<RootStore | undefined>(undefined)
+function App({navigation}) {
+
+  const [rootStore, setRootStore] = useState<RootStore | undefined>(undefined);
+
+  const [user, setUser] = useState<{name?: string; password?: string}>({name: '', password: ''});
+
   const {
     initialNavigationState,
     onNavigationStateChange,
@@ -57,14 +67,16 @@ function App() {
   return (
     <ToggleStorybook>
       <RootStoreProvider value={rootStore}>
-        <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-          <ErrorBoundary catchErrors={"always"}>
-            <AppNavigator
-              initialState={initialNavigationState}
-              onStateChange={onNavigationStateChange}
-            />
-          </ErrorBoundary>
-        </SafeAreaProvider>
+          <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+            <ErrorBoundary catchErrors={"always"}>
+              <UserGlobalContext.Provider value={{user, setUser}}>
+                <AppNavigator
+                  initialState={initialNavigationState}
+                  onStateChange={onNavigationStateChange}
+                />
+              </UserGlobalContext.Provider>
+            </ErrorBoundary>
+          </SafeAreaProvider>
       </RootStoreProvider>
     </ToggleStorybook>
   )
