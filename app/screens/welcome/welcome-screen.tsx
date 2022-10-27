@@ -90,7 +90,7 @@ export const WelcomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> 
 
   ({ navigation }) => {
 
-    const nextScreen = () => navigation.navigate("login")
+    const nextScreen = () => navigation.navigate("productList");
 
     return (
 
@@ -120,7 +120,7 @@ export const WelcomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> 
               testID="next-screen-button"
               style={CONTINUE}
               textStyle={CONTINUE_TEXT}
-              text='Log into your account'
+              text='Go to Products section'
               onPress={nextScreen}
             />
           </View>

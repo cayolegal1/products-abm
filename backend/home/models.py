@@ -42,21 +42,23 @@ class Feedback(models.Model):
     def __str__(self):
         return '{} - {}'.format(self.pk, self.user.username)
 
+class Images(models.Model):
+
+    image = models.ImageField(upload_to='product-images', null=True)
 
 class Product(models.Model):
 
     product_state_choices = [
 
-        ("EN STOCK", "En stock"),
-        ("SIN STOCK", "Sin stock")
+        ("In stock", "In stock"),
+        ("Off stock", "Off stock")
     ]
 
-    Codigo = models.CharField(unique=True, max_length=500)
-    Descripcion = models.TextField()
-    Estado = models.CharField(choices=product_state_choices, max_length=15)
-    Imagenes = models.ImageField(upload_to='product-images')
+    code = models.CharField(unique=True, max_length=500)
+    description = models.TextField()
+    state = models.CharField(choices=product_state_choices, max_length=15)
+    primaryImage = models.ImageField(upload_to='product-images')
+    images = models.ForeignKey(Images, on_delete = models.SET_NULL, null=True)
 
-    def __str__(self) -> str:
-        return super().__str__()
 
 

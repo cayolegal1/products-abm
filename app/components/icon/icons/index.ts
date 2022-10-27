@@ -3,7 +3,8 @@ export const icons = {
   bullet: require("./bullet.png"),
   bug: require("./ladybug.png"),
   logout: require('./cerrar-sesion.png'),
-  logoutText: 'Logout'
+  login: require('./iniciar-sesion.png'),
+  navbar: require('./menu.png')
 }
 
 export type IconTypes = keyof typeof icons

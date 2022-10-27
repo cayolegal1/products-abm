@@ -1,7 +1,8 @@
-import React, {FC} from 'react';
+import React, {FC, useContext} from 'react';
 import { StackScreenProps } from "@react-navigation/stack"
-import { NavigatorParamList } from "../../navigators"
 import { View, ScrollView, Image, TextStyle, ViewStyle, ImageStyle } from 'react-native';
+import { NavigatorParamList } from "../../navigators"
+import { UserGlobalContext } from '../../models';
 import {Text, Header, GradientBackground} from '../../components';
 import { observer } from "mobx-react-lite";
 import { spacing, color, typography } from '../../theme';
@@ -69,7 +70,9 @@ export const ProductDetailScreen: FC<StackScreenProps<NavigatorParamList, "produ
 
     ({navigation, route}) => {
 
-        const {name, price, currency, description, primaryImage, images} : any = route.params;
+        const {user} = useContext(UserGlobalContext);
+        const {is_user} = user
+        const {name, price, currency, description, primaryImage, images, state} : any = route.params;
 
         const goBack = () => navigation.goBack();
         const logout = () => navigation.navigate('login');
@@ -87,7 +90,7 @@ export const ProductDetailScreen: FC<StackScreenProps<NavigatorParamList, "produ
                     onLeftPress={goBack}
                     style={HEADER}
                     titleStyle={HEADER_TITLE}
-                    rightIcon="logout"
+                    rightIcon={is_user ? 'logout' : 'login'}
                     onRightPress={logout}
                 />
                 
@@ -101,6 +104,8 @@ export const ProductDetailScreen: FC<StackScreenProps<NavigatorParamList, "produ
                 <Text text={`Description: ${description}`} style={TEXT_PRODUCT} />
                 <Text text={`Actual price: ${price}`} style={TEXT_PRODUCT} />
                 <Text text={`Currency: ${currency}`} style={TEXT_PRODUCT} />
+
+                {is_user  && (<Text text={`State: ${state}`} style={TEXT_PRODUCT} />)}
 
                 <Text text={`Other Images`} style={OTHER_IMAGES_TEXT} />
 

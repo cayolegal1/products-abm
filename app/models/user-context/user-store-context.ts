@@ -1,10 +1,10 @@
 import { createContext, SetStateAction, Dispatch,  } from "react"
-
-
 interface IGlobalUserState {
 
     user: string,
-    password: string
+    password: string,
+    is_admin: boolean,
+    is_user: boolean
 };
 
 export const UserGlobalContext = createContext(

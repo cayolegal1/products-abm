@@ -1,6 +1,7 @@
 from django.shortcuts import HttpResponse, render
 from home.models import Product
-
+from rest_framework.viewsets import ModelViewSet
+from home.api.serializers import ProductSerializer
 
 def home(request):
     packages = [
@@ -14,6 +15,6 @@ def home(request):
     return render(request, 'home/index.html', context)
 
 
-
-def list_products(request):
-    return HttpResponse(Product.objects.all())
+class ProductViewSet(ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer

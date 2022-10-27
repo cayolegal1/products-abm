@@ -1,8 +1,8 @@
 from xml.etree.ElementInclude import include
 from django.urls import path
-from .views import home, list_products
+from .views import home, ProductViewSet
 
 urlpatterns = [
-    path("", home, name="home"),
-    path("products/", list_products)
+
+    path("/", ProductViewSet.as_view({'get': 'list'}))
 ]

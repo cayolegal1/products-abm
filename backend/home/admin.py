@@ -4,6 +4,6 @@ from home.models import Product
 
 class ProductAdmin(admin.ModelAdmin):
     
-    list_display = ['Codigo', 'Descripcion' ]
+    list_display = ['code', 'description' ]
 
 admin.site.register(Product, ProductAdmin)

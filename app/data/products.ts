@@ -6,6 +6,7 @@ export const products = [
         price: 250,
         currency: 'USD',
         description: 'A console to play videogames',
+        state: 'In stock',
         primaryImage: 'https://i.guim.co.uk/img/media/6e8ea77edb3da8c8e0714821229df7ed8c52383d/39_30_998_599/master/998.jpg?width=465&quality=85&dpr=1&s=none',
         images: [
             'https://sm.ign.com/t/ign_es/news/s/sony-expec/sony-expects-to-be-done-with-ps4-games-by-2025_a2x8.h960.jpg',
@@ -19,6 +20,7 @@ export const products = [
         price: 700,
         currency: 'EUR',
         description: 'A newest cellphone',
+        state: 'Off stock',
         primaryImage: "https://nissei.com/media/catalog/product/cache/16a9529cefd63504739dab4fc3414065/3/d/3d4a79a3-96dd-4176-a0bb-57603e7eec0a.jpg",
         images: [
             'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRp9ryGoKJXtslHbar13m5KzduPFpMUI3u2RQ&usqp=CAU',
@@ -32,6 +34,7 @@ export const products = [
         price: 1000,
         currency: 'USD',
         description: 'Powerful computer with good components',
+        state: 'In stock',
         primaryImage: 'https://www.popphoto.com/uploads/2021/08/28/Best_Desktop_Computer.jpg?auto=webp',
         images: [
             'https://i.pcmag.com/imagery/roundups/06o6G8AsNkTfU4iPG42UXTV-21..v1587139273.jpg',

@@ -9,6 +9,7 @@
  * The app navigation resides in ./app/navigators, so head over there
  * if you're interested in adding screens and navigators.
  */
+ import 'react-native-gesture-handler';
 import "./i18n"
 import "./utils/ignore-warnings"
 import React, { useState, useEffect } from "react"
@@ -35,11 +36,11 @@ export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
 /**
  * This is the root component of our app.
  */
-function App({navigation}) {
+function App() {
 
   const [rootStore, setRootStore] = useState<RootStore | undefined>(undefined);
 
-  const [user, setUser] = useState<{name?: string; password?: string}>({name: '', password: ''});
+  const [user, setUser] = useState<{name?: string; password?: string; is_admin?: boolean, is_user?: boolean}>({name: '', password: '', is_admin: false, is_user: false});
 
   const {
     initialNavigationState,
