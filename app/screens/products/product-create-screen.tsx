@@ -102,6 +102,23 @@ export const CreateProductScreen: FC<DrawerScreenProps<NavigatorParamListDrawer,
                   onChangeText={name => console.log(name)}
                 />
 
+                <TextInput 
+                  editable 
+                  placeholder='Currency' 
+                  style={INPUT}
+                  onChangeText={name => console.log(name.toUpperCase())}
+                  maxLength={3}
+                />
+
+                <TextInput 
+                  editable 
+                  keyboardType='numeric'
+                  placeholder='Price' 
+                  style={INPUT}
+                  onChangeText={name => console.log(name.toUpperCase())}
+                  maxLength={3}
+                />
+
                 <Picker style={PICKER} selectedValue={stateProduct} onValueChange={(item, index) => setStateProduct(item)} >
                   <Picker.Item enabled={false} label='State of product' value={'State of the product'} />
                   <Picker.Item enabled={true} label='In stock' value={'En stock'} />

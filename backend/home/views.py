@@ -16,5 +16,9 @@ def home(request):
 
 
 class ProductViewSet(ModelViewSet):
-    queryset = Product.objects.all()
+
     serializer_class = ProductSerializer
+
+    def get_queryset(self):
+        return Product.objects.all()
+    

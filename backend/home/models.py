@@ -42,9 +42,6 @@ class Feedback(models.Model):
     def __str__(self):
         return '{} - {}'.format(self.pk, self.user.username)
 
-class Images(models.Model):
-
-    image = models.ImageField(upload_to='product-images', null=True)
 
 class Product(models.Model):
 
@@ -54,11 +51,18 @@ class Product(models.Model):
         ("Off stock", "Off stock")
     ]
 
-    code = models.CharField(unique=True, max_length=500)
+    code = models.CharField(unique = True, max_length = 500)
+    name = models.CharField(max_length = 25, default = 'Actualizar')
     description = models.TextField()
-    state = models.CharField(choices=product_state_choices, max_length=15)
-    primaryImage = models.ImageField(upload_to='product-images')
-    images = models.ForeignKey(Images, on_delete = models.SET_NULL, null=True)
+    price = models.IntegerField(default = 0)
+    currency = models.CharField(max_length = 3, default = 'USD')
+    state = models.CharField(choices = product_state_choices, max_length = 10)
+    primaryImage = models.ImageField(upload_to = 'product-images', null = True)
+
+class Images(models.Model):
+
+    image = models.ForeignKey(Product, on_delete = models.SET_NULL, null = True)
+
 
 
 

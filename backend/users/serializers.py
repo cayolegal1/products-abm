@@ -12,8 +12,9 @@ from rest_framework import serializers
 from rest_auth.serializers import PasswordResetSerializer, LoginSerializer
 from rest_framework.exceptions import ValidationError
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from .models import User
 
-User = get_user_model()
+#User = get_user_model()
 
 
 class SignupSerializer(serializers.ModelSerializer):
@@ -99,10 +100,10 @@ class SignupSerializer(serializers.ModelSerializer):
         return super().save()
 
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['id', 'email', 'name']
+# class UserSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = User
+#         fields = ['id', 'email', 'name']
 
 
 class PasswordSerializer(PasswordResetSerializer):
@@ -140,4 +141,33 @@ class AuthTokenSerializer(UserDetailSerializer):
         token_instance = self.instance
         profile = token_instance.user
         self.instance = profile
+
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta: 
+        model = User
+        fields = '__all__'
+        def create(self, validated_data):
+
+            user = User.objects.create(
+                first_name=validated_data["first_name"],
+                last_name=validated_data["last_name"],
+                phone_number=validated_data["phone_number"],
+                username=generate_unique_username([
+                    validated_data.get('first_name'),
+                    validated_data.get('last_name'),
+                    validated_data.get('email'),
+                    'user'
+                ]),
+                email=validated_data['email'],
+            )
+            password = validated_data['password']
+            user.set_password(password)
+            user.save()
+            return user
+
+    def save(self, request=None):
+        """rest_auth passes request so we must override to accept it"""
+        return super().save()
 

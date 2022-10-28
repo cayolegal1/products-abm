@@ -1,11 +1,11 @@
-import React, {FC, useContext} from 'react';
+import React, {FC, useContext, useEffect, useState} from 'react';
 import {DrawerScreenProps} from '@react-navigation/drawer';
 import { TextStyle, ViewStyle, Image, ScrollView, TouchableOpacity, ImageStyle } from 'react-native';
 import { observer } from "mobx-react-lite";
 import {Text, Header, GradientBackground, Card} from '../../components';
 import { UserGlobalContext } from '../../models';
 import { NavigatorParamListDrawer } from '../../navigators';
-import {products} from '../../data';
+//import {products} from '../../data';
 import { spacing, color, typography } from '../../theme';
 
 const FULL: ViewStyle = { 
@@ -52,6 +52,8 @@ const IMAGE: ImageStyle = {
 export const ProductListScreen: FC<DrawerScreenProps<NavigatorParamListDrawer, "Products">> = observer(
 
     ({navigation}) => {
+        
+        const [products, setProducts] = useState([]);
 
         const {user, setUser} : any = useContext(UserGlobalContext);
 
@@ -80,7 +82,7 @@ export const ProductListScreen: FC<DrawerScreenProps<NavigatorParamListDrawer, "
         
         const renderProducts = () => (
             
-            products.map((product) => 
+            products.map((product : any) => 
 
                 <Card key={product.id}>
 
@@ -98,6 +100,42 @@ export const ProductListScreen: FC<DrawerScreenProps<NavigatorParamListDrawer, "
         );
 
         const toggleDrawer = () => navigation.toggleDrawer();
+
+        const fetchData = (url) => {
+
+            return fetch(url)
+            .then(response => response.json())
+            .then(data => {
+
+                console.log(data);
+                return data;
+            })
+            .catch(error => console.log(error.message))
+        }
+
+        const setData = async () => {
+            
+            try {
+
+                const request = await fetchData('http://192.168.183.154:8000/products/');
+
+                console.log(request)
+
+                const {results} : any = request;
+
+                setProducts(results)
+
+            } catch(error) {
+
+                console.log(error.message)
+            }
+        }
+
+        useEffect(() => {
+
+            setData();
+
+        }, [])
 
         return(
 

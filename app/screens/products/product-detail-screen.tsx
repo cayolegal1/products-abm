@@ -109,7 +109,7 @@ export const ProductDetailScreen: FC<StackScreenProps<NavigatorParamList, "produ
 
                 <Text text={`Other Images`} style={OTHER_IMAGES_TEXT} />
 
-                {images.map(image => 
+                {/* {images.map(image => 
 
                     <View key={image} style={IMAGE_CONTAINER}>
                         <Image
@@ -117,7 +117,7 @@ export const ProductDetailScreen: FC<StackScreenProps<NavigatorParamList, "produ
                             source={{uri: image}}
                         />
                     </View>
-                )}
+                )} */}
 
             </ScrollView>
         )

@@ -9,6 +9,9 @@ from allauth.socialaccount.providers.apple.client import AppleOAuth2Client
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+from rest_framework.viewsets import ModelViewSet
+from .models import User
+from .serializers import UserSerializer
 
 User = get_user_model()
 
@@ -50,34 +53,43 @@ User = get_user_model()
 #         return serializer_class(*args, **kwargs)
 #
 
-class UserDetailView(LoginRequiredMixin, DetailView):
-    model = User
-    slug_field = "username"
-    slug_url_kwarg = "username"
+# class UserDetailView(LoginRequiredMixin, DetailView):
+#     #model = User
+#     slug_field = "username"
+#     slug_url_kwarg = "username"
 
 
-user_detail_view = UserDetailView.as_view()
+#user_detail_view = UserDetailView.as_view()
 
 
-class UserUpdateView(LoginRequiredMixin, UpdateView):
-    model = User
-    fields = ["name"]
+# class UserUpdateView(LoginRequiredMixin, UpdateView):
+#     model = User
+#     fields = ["name"]
 
-    def get_success_url(self):
-        return reverse("users:detail", kwargs={"username": self.request.user.username})
+#     def get_success_url(self):
+#         return reverse("users:detail", kwargs={"username": self.request.user.username})
 
-    def get_object(self):
-        return User.objects.get(username=self.request.user.username)
-
-
-user_update_view = UserUpdateView.as_view()
+#     def get_object(self):
+#         return User.objects.get(username=self.request.user.username)
 
 
-class UserRedirectView(LoginRequiredMixin, RedirectView):
-    permanent = False
-
-    def get_redirect_url(self):
-        return reverse("users:detail", kwargs={"username": self.request.user.username})
+# user_update_view = UserUpdateView.as_view()
 
 
-user_redirect_view = UserRedirectView.as_view()
+# class UserRedirectView(LoginRequiredMixin, RedirectView):
+#     permanent = False
+
+#     def get_redirect_url(self):
+#         return reverse("users:detail", kwargs={"username": self.request.user.username})
+
+
+# user_redirect_view = UserRedirectView.as_view()
+
+
+
+class UserSetView(ModelViewSet):
+    query_set = User.objects.all()
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        return User.objects.all()

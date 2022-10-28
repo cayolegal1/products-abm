@@ -29,7 +29,7 @@ from drf_yasg import openapi
 from home import views as productViews
 
 urlpatterns = [
-    path("products", include("home.urls") ),
+    path("products/", include("home.urls") ),
     path("accounts/", include("allauth.urls")),
     path("api/v1/", include("home.api.v1.urls")),
     path("admin/", admin.site.urls),
