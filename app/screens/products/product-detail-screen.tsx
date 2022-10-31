@@ -1,10 +1,11 @@
 import React, {FC, useContext} from 'react';
+import { View, ScrollView, Image, TextStyle, ViewStyle, ImageStyle, SafeAreaView, Alert } from 'react-native';
 import { StackScreenProps } from "@react-navigation/stack"
-import { View, ScrollView, Image, TextStyle, ViewStyle, ImageStyle } from 'react-native';
+import { observer } from "mobx-react-lite";
+import axios from 'axios';
 import { NavigatorParamList } from "../../navigators"
 import { UserGlobalContext } from '../../models';
-import {Text, Header, GradientBackground} from '../../components';
-import { observer } from "mobx-react-lite";
+import {Text, Header, GradientBackground, Button} from '../../components';
 import { spacing, color, typography } from '../../theme';
 
 const FULL: ViewStyle = { flex: 1 };
@@ -33,21 +34,18 @@ const TEXT_PRODUCT: TextStyle = {
     marginTop: '10%',
     marginLeft: '5%',
     textAlign: 'left'
-}
-
+};
 const IMAGE_CONTAINER: ViewStyle = {
 
     justifyContent: 'center',
     alignItems: 'center'
-}
-
+};
 const IMAGE: ImageStyle = {
 
     width: 300,
     height: 300,
     borderRadius: 10 
-}
-
+};
 const OTHER_IMAGES_TEXT: TextStyle = {
 
 
@@ -57,13 +55,20 @@ const OTHER_IMAGES_TEXT: TextStyle = {
     textAlign: 'center'
 
 };
-
-const OTHER_IMAGES: ImageStyle = {
-
-    ...IMAGE, 
-    margin: '7%'
-}
-
+const GO_BACK_CONTENT: ViewStyle = {
+  paddingVertical: spacing[4],
+  paddingHorizontal: spacing[4],
+};
+const GO_BACK: ViewStyle = {
+    paddingVertical: spacing[4],
+    paddingHorizontal: spacing[4],
+};
+const GO_BACK_TEXT: TextStyle = {
+    ...TEXT,
+    ...BOLD,
+    fontSize: 13,
+    letterSpacing: 2,
+};
 
 
 export const ProductDetailScreen: FC<StackScreenProps<NavigatorParamList, "productDetail">> = observer(
@@ -71,11 +76,43 @@ export const ProductDetailScreen: FC<StackScreenProps<NavigatorParamList, "produ
     ({navigation, route}) => {
 
         const {user} = useContext(UserGlobalContext);
-        const {is_user} = user
-        const {name, price, currency, description, primaryImage, images, state} : any = route.params;
+        const {Is_user, is_admin} = user
+        const {id, code, name, price, currency, description, primaryImage, state} : any = route.params;
 
         const goBack = () => navigation.goBack();
+
         const logout = () => navigation.navigate('login');
+
+        const editNavigate = () => {
+            
+            const product: any = {
+                id,
+                code, 
+                name, 
+                description, 
+                currency, 
+                price: price.toString(), 
+                state, 
+                primaryImage
+            };
+
+            navigation.navigate('edit', product);
+        };
+
+        const deleteProduct = async () => {
+
+            const requestDelete = await axios({
+
+                baseURL: `http://192.168.183.11:8000/products/${id}/`,
+                method: 'DELETE'
+            });
+
+            if(requestDelete.status === 204) {
+
+                Alert.alert(`${name} product deleted successfully!`)
+                navigation.goBack();
+            }
+        };
 
         return(
 
@@ -85,15 +122,30 @@ export const ProductDetailScreen: FC<StackScreenProps<NavigatorParamList, "produ
 
                 <Header
                     headerTx="demoListScreen.title"
-                    leftIcon="back"
+                    leftIcon={is_admin ? 'edit' : 'back'}
                     headerText={`${name} details`}
-                    onLeftPress={goBack}
+                    onLeftPress={is_admin ? editNavigate : goBack}
                     style={HEADER}
                     titleStyle={HEADER_TITLE}
-                    rightIcon={is_user ? 'logout' : 'login'}
-                    onRightPress={logout}
+                    rightIcon={(Is_user) ? (is_admin) ? 'delete' : 'logout' : 'login'}
+                    onRightPress={is_admin ? deleteProduct : logout }
                 />
                 
+                {is_admin && 
+                    (
+                        <SafeAreaView>
+                            <View style={GO_BACK_CONTENT}>
+                                <Button
+                                  testID="next-screen-button"
+                                  style={GO_BACK}
+                                  textStyle={GO_BACK_TEXT}
+                                  text='Go Back to Products section'
+                                  onPress={goBack}
+                                />
+                            </View>
+                        </SafeAreaView>
+                    )}
+
                 <View style={IMAGE_CONTAINER}>
                     <Image
                         style={IMAGE}
@@ -105,19 +157,9 @@ export const ProductDetailScreen: FC<StackScreenProps<NavigatorParamList, "produ
                 <Text text={`Actual price: ${price}`} style={TEXT_PRODUCT} />
                 <Text text={`Currency: ${currency}`} style={TEXT_PRODUCT} />
 
-                {is_user  && (<Text text={`State: ${state}`} style={TEXT_PRODUCT} />)}
+                {Is_user  && (<Text text={`State: ${state}`} style={TEXT_PRODUCT} />)}
 
                 <Text text={`Other Images`} style={OTHER_IMAGES_TEXT} />
-
-                {/* {images.map(image => 
-
-                    <View key={image} style={IMAGE_CONTAINER}>
-                        <Image
-                            style={OTHER_IMAGES}
-                            source={{uri: image}}
-                        />
-                    </View>
-                )} */}
 
             </ScrollView>
         )

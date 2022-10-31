@@ -1,11 +1,11 @@
-import React, {FC, useContext, useEffect, useState} from 'react';
+import React, {FC, useContext, useEffect, useState, useCallback} from 'react';
 import {DrawerScreenProps} from '@react-navigation/drawer';
 import { TextStyle, ViewStyle, Image, ScrollView, TouchableOpacity, ImageStyle } from 'react-native';
+import { useIsFocused, useFocusEffect } from '@react-navigation/native';
 import { observer } from "mobx-react-lite";
 import {Text, Header, GradientBackground, Card} from '../../components';
 import { UserGlobalContext } from '../../models';
 import { NavigatorParamListDrawer } from '../../navigators';
-//import {products} from '../../data';
 import { spacing, color, typography } from '../../theme';
 
 const FULL: ViewStyle = { 
@@ -55,13 +55,16 @@ export const ProductListScreen: FC<DrawerScreenProps<NavigatorParamListDrawer, "
         
         const [products, setProducts] = useState([]);
 
-        const {user, setUser} : any = useContext(UserGlobalContext);
+        //@ts-ignore
+        const {user: {name, Is_user}, setUser} : any = useContext(UserGlobalContext);
 
-        const {name, is_user} : any = user;
+        const mustUpdate = useIsFocused();
 
         const goToProductDetail = (product) => { 
 
             const productDetail : any = { ...product };
+
+            //@ts-ignore
             navigation.navigate("productDetail", productDetail);
         }
 
@@ -101,27 +104,11 @@ export const ProductListScreen: FC<DrawerScreenProps<NavigatorParamListDrawer, "
 
         const toggleDrawer = () => navigation.toggleDrawer();
 
-        const fetchData = (url) => {
-
-            return fetch(url)
-            .then(response => response.json())
-            .then(data => {
-
-                console.log(data);
-                return data;
-            })
-            .catch(error => console.log(error.message))
-        }
-
         const setData = async () => {
             
             try {
 
-                const request = await fetchData('http://192.168.183.154:8000/products/');
-
-                console.log(request)
-
-                const {results} : any = request;
+                const {results} = await (await fetch('http://192.168.183.11:8000/products')).json();
 
                 setProducts(results)
 
@@ -129,13 +116,13 @@ export const ProductListScreen: FC<DrawerScreenProps<NavigatorParamListDrawer, "
 
                 console.log(error.message)
             }
-        }
+        };
 
-        useEffect(() => {
+        useFocusEffect(useCallback(() => {
 
-            setData();
-
-        }, [])
+            setData()
+            
+        }, []));
 
         return(
 
@@ -146,14 +133,14 @@ export const ProductListScreen: FC<DrawerScreenProps<NavigatorParamListDrawer, "
                 <Header
                   titleStyle={HEADER_TITLE}
                   style={HEADER}
-                  rightIcon={(is_user) ? 'logout' : 'login'}
-                  leftIcon={is_user && 'navbar'}
+                  rightIcon={(Is_user) ? 'logout' : 'login'}
+                  leftIcon={Is_user && 'navbar'}
                   onLeftPress={toggleDrawer}
-                  onRightPress={(is_user) ? logoutAction : loginNavigateAction }
+                  onRightPress={(Is_user) ? logoutAction : loginNavigateAction }
                   headerText='Products section'
                 />
 
-                {(is_user) && (<Text text={`Welcome ${name}!`} style={TEXT_USER} />)}
+                {(Is_user) && (<Text text={`Welcome ${name}!`} style={TEXT_USER} />)}
 
                 {renderProducts()}
 

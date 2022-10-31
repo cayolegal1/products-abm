@@ -21,12 +21,6 @@ import { RootStore, RootStoreProvider, setupRootStore, UserGlobalContext } from 
 import { ToggleStorybook } from "../storybook/toggle-storybook"
 import { ErrorBoundary } from "./screens/error/error-boundary"
 
-interface AppContextInterface {
-  name: string;
-  author: string;
-  url: string;
-}
-
 // This puts screens in a native ViewController or Activity. If you want fully native
 // stack navigation, use `createNativeStackNavigator` in place of `createStackNavigator`:
 // https://github.com/kmagiera/react-native-screens#using-native-stack-navigator
@@ -40,7 +34,7 @@ function App() {
 
   const [rootStore, setRootStore] = useState<RootStore | undefined>(undefined);
 
-  const [user, setUser] = useState<{name?: string; password?: string; is_admin?: boolean, is_user?: boolean}>({name: '', password: '', is_admin: false, is_user: false});
+  const [user, setUser] = useState<{name?: string; password?: string; is_admin?: boolean, Is_user?: boolean}>({name: '', password: '', is_admin: false, Is_user: false});
 
   const {
     initialNavigationState,

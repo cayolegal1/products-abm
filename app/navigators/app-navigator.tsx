@@ -8,7 +8,7 @@ import React from "react"
 import { useColorScheme } from "react-native"
 import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
-import { WelcomeScreen, DemoScreen, DemoListScreen, ProductListScreen, LoginScreen, ProductDetailScreen } from "../screens"
+import { WelcomeScreen, DemoScreen, DemoListScreen, LoginScreen, ProductDetailScreen, EditProductScreen } from "../screens"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
 import { LateralMenu } from '.';
 
@@ -31,8 +31,8 @@ export type NavigatorParamList = {
   // 🔥 Your screens go here
   productList: undefined
   login: undefined
+  edit: undefined
   productDetail: undefined
-  test: undefined
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
@@ -53,6 +53,7 @@ const AppStack = () => {
       {/* <Stack.Screen name="products" component={ProductListScreen} /> */}
       <Stack.Screen name="login" component={LoginScreen} />
       <Stack.Screen name="productDetail" component={ProductDetailScreen} />
+      <Stack.Screen name="edit" component={EditProductScreen} />
       <Stack.Screen name="productList" component={LateralMenu} />
 
     </Stack.Navigator>

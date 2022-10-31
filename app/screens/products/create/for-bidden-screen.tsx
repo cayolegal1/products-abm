@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, ViewStyle, TextStyle, SafeAreaView} from 'react-native';
-import { Text, Button} from '../../components';
-import {color, spacing, typography} from '../../theme';
+import { Text, Button} from '../../../components';
+import {color, spacing, typography} from '../../../theme';
 
 const BOLD: TextStyle = { 
     fontWeight: "bold" 
@@ -38,14 +38,14 @@ const FOOTER_CONTENT: ViewStyle = {
 
 type ForbideProps = {
 
-    goBack: any, 
-    goHome?: any,
-    goLogin?: any
+    navigateTo: any, 
+    goBack: any,
 }
 
 export const ForbideScreen = (props: ForbideProps) => {
  
   return (
+
     <View>
 
         <Text 
@@ -66,7 +66,7 @@ export const ForbideScreen = (props: ForbideProps) => {
                   style={CONTINUE}
                   textStyle={CONTINUE_TEXT}
                   text='Log with another account'
-                  onPress={props.goLogin}
+                  onPress={() => props.navigateTo('login')}
                 />
             </View>
 
@@ -86,7 +86,7 @@ export const ForbideScreen = (props: ForbideProps) => {
                   style={CONTINUE}
                   textStyle={CONTINUE_TEXT}
                   text='Go Home'
-                  onPress={props.goHome}
+                  onPress={() => props.navigateTo('welcome')}
                 />
             </View>
 

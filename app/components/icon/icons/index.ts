@@ -4,7 +4,9 @@ export const icons = {
   bug: require("./ladybug.png"),
   logout: require('./cerrar-sesion.png'),
   login: require('./iniciar-sesion.png'),
-  navbar: require('./menu.png')
-}
+  navbar: require('./menu.png'),
+  edit: require('./edit.png'),
+  delete: require('./delete.png'),
+};
 
-export type IconTypes = keyof typeof icons
+export type IconTypes = keyof typeof icons;
