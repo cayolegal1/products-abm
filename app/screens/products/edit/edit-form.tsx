@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { Alert, View, SafeAreaView, TextInput, TextStyle, ViewStyle } from 'react-native';
+import { View, SafeAreaView, TextInput, TextStyle, ViewStyle } from 'react-native';
 import { Formik } from 'formik';
 import { useNavigation } from '@react-navigation/native'
 import { Picker } from '@react-native-picker/picker';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
-import axios from 'axios';
 import { Button } from '../../../components'
+import {submitData, openPhoneAssets, api} from '../../../helpers';
 import { color, spacing, typography } from '../../../theme';
 
 const BOLD: TextStyle = { 
@@ -66,62 +65,16 @@ export const EditFormComponent= ({id, code, name,  description, currency, price,
 
   const navigation = useNavigation();
 
-  const api = axios.create({
-
-    baseURL: 'http://192.168.183.11:8000',
-    headers: {
-
-        'Content-Type': 'application/json'
-    }
-  });
-
-  const openPhoneAssets = async (mode) => {
-
-    let options: any = {
-      title: 'Select Image',
-      customButtons: [
-        { name: 'customOptionKey', title: 'Choose Photo from Custom Option' },
-      ],
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
-    };
-
-    return mode.includes('camera')
-     ? await launchCamera(options, (res) => console.log(res))
-     : await launchImageLibrary(options, (res) => console.log(res));
-  }
-
   return (
     
     <View>
         <Formik 
-          initialValues={{code, name, description, currency, price, state, primaryImage: null}}
-          onSubmit={async (values) => {
-            
-            try {
-              
-              const request = await api.put(`/products/${id}/`, {...values});
-
-              if(request.status === 200) {
-
-                Alert.alert('Product updated', JSON.stringify(values));
-
-                navigation.navigate('Products');
-              }
-
-            } catch(error) {
-
-              Alert.alert(error.message)
-            }
-            
-        }} >
-
+          initialValues={{code, name, description, currency, price, state, primaryImage}}
+          onSubmit={async (values) => await submitData(values, 'PUT', api, navigation, id)}    
+        >
           {(formikProps) => (
 
             <>
-
               <TextInput 
                editable 
                placeholder='Code' 
@@ -187,7 +140,7 @@ export const EditFormComponent= ({id, code, name,  description, currency, price,
                       style={CONTINUE}
                       textStyle={CONTINUE_TEXT}
                       text='Open Camera'
-                      onPress={() => openPhoneAssets('camera')}
+                      onPress={() => openPhoneAssets('camera', formikProps)}
                     />
                 </View>
 
@@ -197,7 +150,7 @@ export const EditFormComponent= ({id, code, name,  description, currency, price,
                     style={CONTINUE}
                     textStyle={CONTINUE_TEXT}
                     text='Open Gallery'
-                    onPress={() => openPhoneAssets('gallery')}
+                    onPress={() => openPhoneAssets('gallery', formikProps)}
                   />
                 </View>
 
@@ -212,7 +165,6 @@ export const EditFormComponent= ({id, code, name,  description, currency, price,
                 </View>
 
               </SafeAreaView>
-
             </>  
           )}
 

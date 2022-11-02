@@ -109,14 +109,15 @@ export const ProductDetailScreen: FC<StackScreenProps<NavigatorParamList, "produ
                   modalVisible={modalVisible} 
                   setModalVisible={setModalVisible} 
                   id={id}
-                  name={name} />
+                  name={name} 
+                />
                 
                 {is_admin && (<GoBackButton goBack={goBack} />)}
 
                 <View style={IMAGE_CONTAINER}>
                     <Image
-                        style={IMAGE}
-                        source={{uri: primaryImage}}
+                      style={IMAGE}
+                      source={{uri: primaryImage}}
                     />
                 </View>
 
