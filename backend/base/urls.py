@@ -23,10 +23,13 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from django.views.generic.base import TemplateView
 from allauth.account.views import confirm_email
-from rest_framework import permissions
+from rest_framework import permissions, routers
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from home import views as productViews
+from users.views import LoginView
+
+router = routers.DefaultRouter()
 
 urlpatterns = [
     path("products/", include("home.urls") ),
@@ -34,6 +37,8 @@ urlpatterns = [
     path("api/v1/", include("home.api.v1.urls")),
     path("admin/", admin.site.urls),
     path("users/", include("users.urls", namespace="users")),
+    path('login/', LoginView.as_view(), name='login'),
+    #path('login', include(router.urls)),
     path("rest-auth/", include("rest_auth.urls")),
     # Override email confirm to use allauth's HTML view instead of rest_auth's API view
     path("rest-auth/registration/account-confirm-email/<str:key>/", confirm_email),
