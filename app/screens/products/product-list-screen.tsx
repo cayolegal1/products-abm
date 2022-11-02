@@ -56,7 +56,7 @@ export const ProductListScreen: FC<DrawerScreenProps<NavigatorParamListDrawer, "
         const [products, setProducts] = useState([]);
 
         //@ts-ignore
-        const {user: {name, Is_user}, setUser} : any = useContext(UserGlobalContext);   
+        const {user: {name, is_user}, setUser} : any = useContext(UserGlobalContext);   
 
         const goToProductDetail = (product) => { 
 
@@ -133,14 +133,14 @@ export const ProductListScreen: FC<DrawerScreenProps<NavigatorParamListDrawer, "
                 <Header
                   titleStyle={HEADER_TITLE}
                   style={HEADER}
-                  rightIcon={(Is_user) ? 'logout' : 'login'}
-                  leftIcon={Is_user && 'navbar'}
+                  rightIcon={(is_user) ? 'logout' : 'login'}
+                  leftIcon={is_user && 'navbar'}
                   onLeftPress={toggleDrawer}
-                  onRightPress={(Is_user) ? logoutAction : loginNavigateAction }
+                  onRightPress={(is_user) ? logoutAction : loginNavigateAction }
                   headerText='Products section'
                 />
 
-                {(Is_user) && (<Text text={`Welcome ${name}!`} style={TEXT_USER} />)}
+                {(is_user) && (<Text text={`Welcome ${name}!`} style={TEXT_USER} />)}
 
                 {renderProducts()}
 

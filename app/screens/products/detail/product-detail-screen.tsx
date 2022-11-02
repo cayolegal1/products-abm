@@ -60,7 +60,7 @@ export const ProductDetailScreen: FC<StackScreenProps<NavigatorParamList, "produ
 
     ({navigation, route}) => {
 
-        const {user : {Is_user, is_admin}} = useContext(UserGlobalContext);
+        const {user : {is_user, is_staff}} = useContext(UserGlobalContext);
 
         const {id, code, name, price, currency, description, primaryImage, state} : any = route.params;
 
@@ -96,13 +96,13 @@ export const ProductDetailScreen: FC<StackScreenProps<NavigatorParamList, "produ
 
                 <Header
                     headerTx="demoListScreen.title"
-                    leftIcon={is_admin ? 'edit' : 'back'}
+                    leftIcon={is_staff ? 'edit' : 'back'}
                     headerText={`${name} details`}
-                    onLeftPress={is_admin ? editNavigate : goBack}
+                    onLeftPress={is_staff ? editNavigate : goBack}
                     style={HEADER}
                     titleStyle={HEADER_TITLE}
-                    rightIcon={(Is_user) ? (is_admin) ? 'delete' : 'logout' : 'login'}
-                    onRightPress={is_admin ? showModal : logout }
+                    rightIcon={(is_user) ? (is_staff) ? 'delete' : 'logout' : 'login'}
+                    onRightPress={is_staff ? showModal : logout }
                 />
 
                 <ModalComponent 
@@ -112,7 +112,7 @@ export const ProductDetailScreen: FC<StackScreenProps<NavigatorParamList, "produ
                   name={name} 
                 />
                 
-                {is_admin && (<GoBackButton goBack={goBack} />)}
+                {is_staff && (<GoBackButton goBack={goBack} />)}
 
                 <View style={IMAGE_CONTAINER}>
                     <Image
@@ -125,7 +125,7 @@ export const ProductDetailScreen: FC<StackScreenProps<NavigatorParamList, "produ
                 <Text text={`Actual price: ${price}`} style={TEXT_PRODUCT} />
                 <Text text={`Currency: ${currency}`} style={TEXT_PRODUCT} />
 
-                {Is_user  && (<Text text={`State: ${state}`} style={TEXT_PRODUCT} />)}
+                {is_user  && (<Text text={`State: ${state}`} style={TEXT_PRODUCT} />)}
 
                 <Text text={`Other Images`} style={OTHER_IMAGES_TEXT} />
 

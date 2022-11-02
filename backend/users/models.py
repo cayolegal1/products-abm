@@ -47,6 +47,7 @@ class User(AbstractUser):
         upload_to=profile_upload_dir
     )
     phone_number = PhoneNumberField(_("Phone Number"), max_length=100, null=True)
+    is_user = models.BooleanField(default = True)
 
     def get_absolute_url(self):
         return reverse("users:detail", kwargs={"username": self.username})

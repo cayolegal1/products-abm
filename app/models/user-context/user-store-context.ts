@@ -3,13 +3,8 @@ interface IGlobalUserState {
 
     user: string,
     password: string,
-    is_admin: boolean,
-    Is_user: boolean, 
-};
-
-interface IGlobalUpdate {
-
-    shouldUpdate: boolean
+    is_staff: boolean,
+    is_user: boolean, 
 };
 
 export const UserGlobalContext = createContext(

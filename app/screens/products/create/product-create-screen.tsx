@@ -37,7 +37,7 @@ export const CreateProductScreen: FC<DrawerScreenProps<NavigatorParamListDrawer,
 
   const {user} = useContext(UserGlobalContext);
 
-  const {is_admin} = user;
+  const {is_staff} = user;
 
   const goBack = () => navigation.goBack();
 
@@ -54,12 +54,12 @@ export const CreateProductScreen: FC<DrawerScreenProps<NavigatorParamListDrawer,
         <Header
           titleStyle={HEADER_TITLE}
           style={HEADER}
-          headerText={is_admin ? 'Create a new Product' : 'Unauthorized'}
+          headerText={is_staff ? 'Create a new Product' : 'Unauthorized'}
           leftIcon='navbar'
           onLeftPress={toggleDrawer}
         />
 
-        { !is_admin 
+        { !is_staff 
         
            ?  ( <ForbideScreen navigateTo={navigateTo} goBack={goBack} /> ) 
             
