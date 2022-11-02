@@ -56,9 +56,7 @@ export const ProductListScreen: FC<DrawerScreenProps<NavigatorParamListDrawer, "
         const [products, setProducts] = useState([]);
 
         //@ts-ignore
-        const {user: {name, Is_user}, setUser} : any = useContext(UserGlobalContext);
-
-        const mustUpdate = useIsFocused();
+        const {user: {name, Is_user}, setUser} : any = useContext(UserGlobalContext);   
 
         const goToProductDetail = (product) => { 
 
@@ -117,6 +115,8 @@ export const ProductListScreen: FC<DrawerScreenProps<NavigatorParamListDrawer, "
                 console.log(error.message)
             }
         };
+
+        
 
         useFocusEffect(useCallback(() => {
 

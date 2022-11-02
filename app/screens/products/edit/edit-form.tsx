@@ -1,4 +1,4 @@
-import React, { useState, FC } from 'react';
+import React, { useState } from 'react';
 import { Alert, View, SafeAreaView, TextInput, TextStyle, ViewStyle } from 'react-native';
 import { Formik } from 'formik';
 import { useNavigation } from '@react-navigation/native'
@@ -58,7 +58,7 @@ type EditProps = {
   price: string, 
   state: string,
   primaryImage: string
-}
+};
 
 export const EditFormComponent= ({id, code, name,  description, currency, price, state, primaryImage }: EditProps) => {
     

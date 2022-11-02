@@ -1,12 +1,12 @@
-import React, {FC, useContext} from 'react';
-import { View, ScrollView, Image, TextStyle, ViewStyle, ImageStyle, SafeAreaView, Alert } from 'react-native';
+import React, {FC, useContext, useState} from 'react';
+import { View, ScrollView, Image, TextStyle, ViewStyle, ImageStyle, Alert } from 'react-native';
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite";
-import axios from 'axios';
-import { NavigatorParamList } from "../../navigators"
-import { UserGlobalContext } from '../../models';
-import {Text, Header, GradientBackground, Button} from '../../components';
-import { spacing, color, typography } from '../../theme';
+import { NavigatorParamList } from "../../../navigators"
+import { UserGlobalContext } from '../../../models';
+import { GoBackButton, ModalComponent } from '.';
+import {Text, Header, GradientBackground} from '../../../components';
+import { spacing, color, typography } from '../../../theme';
 
 const FULL: ViewStyle = { flex: 1 };
 const BOLD: TextStyle = { fontWeight: "bold" };
@@ -55,29 +55,16 @@ const OTHER_IMAGES_TEXT: TextStyle = {
     textAlign: 'center'
 
 };
-const GO_BACK_CONTENT: ViewStyle = {
-  paddingVertical: spacing[4],
-  paddingHorizontal: spacing[4],
-};
-const GO_BACK: ViewStyle = {
-    paddingVertical: spacing[4],
-    paddingHorizontal: spacing[4],
-};
-const GO_BACK_TEXT: TextStyle = {
-    ...TEXT,
-    ...BOLD,
-    fontSize: 13,
-    letterSpacing: 2,
-};
-
 
 export const ProductDetailScreen: FC<StackScreenProps<NavigatorParamList, "productDetail">> = observer(
 
     ({navigation, route}) => {
 
-        const {user} = useContext(UserGlobalContext);
-        const {Is_user, is_admin} = user
+        const {user : {Is_user, is_admin}} = useContext(UserGlobalContext);
+
         const {id, code, name, price, currency, description, primaryImage, state} : any = route.params;
+
+        const [modalVisible, setModalVisible] = useState(false);
 
         const goBack = () => navigation.goBack();
 
@@ -99,20 +86,7 @@ export const ProductDetailScreen: FC<StackScreenProps<NavigatorParamList, "produ
             navigation.navigate('edit', product);
         };
 
-        const deleteProduct = async () => {
-
-            const requestDelete = await axios({
-
-                baseURL: `http://192.168.183.11:8000/products/${id}/`,
-                method: 'DELETE'
-            });
-
-            if(requestDelete.status === 204) {
-
-                Alert.alert(`${name} product deleted successfully!`)
-                navigation.goBack();
-            }
-        };
+        const showModal = () => setModalVisible(!modalVisible)
 
         return(
 
@@ -128,23 +102,16 @@ export const ProductDetailScreen: FC<StackScreenProps<NavigatorParamList, "produ
                     style={HEADER}
                     titleStyle={HEADER_TITLE}
                     rightIcon={(Is_user) ? (is_admin) ? 'delete' : 'logout' : 'login'}
-                    onRightPress={is_admin ? deleteProduct : logout }
+                    onRightPress={is_admin ? showModal : logout }
                 />
+
+                <ModalComponent 
+                  modalVisible={modalVisible} 
+                  setModalVisible={setModalVisible} 
+                  id={id}
+                  name={name} />
                 
-                {is_admin && 
-                    (
-                        <SafeAreaView>
-                            <View style={GO_BACK_CONTENT}>
-                                <Button
-                                  testID="next-screen-button"
-                                  style={GO_BACK}
-                                  textStyle={GO_BACK_TEXT}
-                                  text='Go Back to Products section'
-                                  onPress={goBack}
-                                />
-                            </View>
-                        </SafeAreaView>
-                    )}
+                {is_admin && (<GoBackButton goBack={goBack} />)}
 
                 <View style={IMAGE_CONTAINER}>
                     <Image

@@ -56,18 +56,19 @@ type FormProps = {
 
 export const FormComponent = (props: FormProps) => {
 
+
   const navigation = useNavigation();
 
   const api = axios.create({
 
     baseURL: 'http://192.168.183.11:8000',
     headers: {
-
-      'Content-Type': 'application/json'
+      'Accept': 'application/json',
+      'Content-Type': 'multipart/form-data'
     }
   });
 
-  const openPhoneAssets = async (mode) => {
+  const openPhoneAssets = async (mode, formik) => {
 
     const options: any = {
       title: 'Select Image',
@@ -80,9 +81,59 @@ export const FormComponent = (props: FormProps) => {
       },
     };
 
+    
     return mode.includes('camera')
      ? await launchCamera(options, (res) => console.log(res))
-     : await launchImageLibrary(options, (res) => console.log(res));
+     //@ts-ignore
+     : await launchImageLibrary(options, (res) => {
+
+        const imageInfo = {
+          uri: res.assets[0].uri,
+          type: res.assets[0].type,
+          name: res.assets[0].fileName
+        };
+        formik.setFieldValue('primaryImage', imageInfo);
+        console.log(imageInfo);
+     });
+  }
+
+  const submitData = async (values) => {
+            
+    try {
+      
+      
+      const form = new FormData();
+      form.append('code', values.code);
+      form.append('name', values.name);
+      form.append('description', values.description);
+      form.append('currency', values.currency);
+      form.append('price', values.price);
+      form.append('state', values.state);
+      form.append('primaryImage', values.primaryImage, 'image.png');  
+
+
+       console.log(JSON.stringify(form, null, 2))
+       //const request = await api.post('/products/', {...values});
+       const request = await api.post('/products/', form);
+       console.log('request==========================')
+       console.log(JSON.stringify(request, null, 2))
+
+      if(request.status === 201) {
+
+        Alert.alert('Product created', JSON.stringify(values));
+
+        //@ts-ignore
+        navigation.navigate('Products');
+      }
+
+      console.log(values)
+
+    } catch(error) { 
+      
+      console.log(error.message);
+      Alert.alert(`Product code '${values.code}' already exists. Please provide another one.`)
+    
+    };
   }
     
   return (
@@ -90,28 +141,9 @@ export const FormComponent = (props: FormProps) => {
       <ScrollView>
         
         <Formik 
-          initialValues={{code: '', name: '', description: '', currency: '', price: '', state: '', primaryImage: null}}
-          onSubmit={async (values) => {
-            
-            try {
-              
-              const request = await api.post('/products/', {...values});
-
-              if(request.status === 201) {
-
-                Alert.alert('Product created', JSON.stringify(values));
-
-                //@ts-ignore
-                navigation.navigate('Products');
-              }
-
-            } catch(error) {
-
-              Alert.alert(`Product code '${values.code}' already exists. Please provide another one.`)
-            }
-            
-        }} >
-
+          initialValues={{code: '', name: '', description: '', currency: '', price: '', state: '', primaryImage: {}}}
+          onSubmit={submitData}
+        >
           {(formikProps) => (
             <>
               <TextInput 
@@ -177,7 +209,7 @@ export const FormComponent = (props: FormProps) => {
                       style={CONTINUE}
                       textStyle={CONTINUE_TEXT}
                       text='Open Camera'
-                      onPress={() => openPhoneAssets('camera')}
+                      onPress={() => openPhoneAssets('camera', formikProps)}
                     />
                 </View>
 
@@ -187,7 +219,7 @@ export const FormComponent = (props: FormProps) => {
                       style={CONTINUE}
                       textStyle={CONTINUE_TEXT}
                       text='Open Gallery'
-                      onPress={() => openPhoneAssets('gallery')}
+                      onPress={() => openPhoneAssets('gallery', formikProps)}
                     />
                 </View>
 
