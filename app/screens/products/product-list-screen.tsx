@@ -1,7 +1,7 @@
 import React, {FC, useContext, useEffect, useState, useCallback} from 'react';
 import {DrawerScreenProps} from '@react-navigation/drawer';
 import { TextStyle, ViewStyle, Image, ScrollView, TouchableOpacity, ImageStyle } from 'react-native';
-import { useIsFocused, useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import { observer } from "mobx-react-lite";
 import {Text, Header, GradientBackground, Card} from '../../components';
 import { UserGlobalContext } from '../../models';

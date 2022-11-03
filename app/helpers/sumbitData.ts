@@ -1,21 +1,24 @@
-import { Alert } from "react-native";
+import { Alert } from "react-native"
 
-export const submitData =
+export const submitData = async (
+  values: object,
+  method: "POST" | "PUT",
+  requestApi,
+  navigator,
+  id?: number,
+) => {
+  try {
 
-    async (values : object, method : 'POST' | 'PUT', requestApi, navigator, id?: number) => {
-            
-    try { 
-      
-      const form : FormData = new FormData();
+  const form: FormData = new FormData()
 
-      Object.keys(values).forEach(key => {
+  Object.keys(values).forEach((key) => {
+    if (key === "primaryImage" && values[key] .name)
+      return form.append(key, values[key], "image.png")
 
-        if(key === 'primaryImage') return form.append(key, values[key], 'image.png');
+    form.append(key, values[key])
+  })
 
-        form.append(key, values[key]);
-      });
-      
-      /*En vez de esto
+  /*En vez de esto
       form.append('code', values.code);
       form.append('name', values.name);
       form.append('description', values.description);
@@ -24,27 +27,24 @@ export const submitData =
       form.append('state', values.state);
       form.append('primaryImage', values.primaryImage, 'image.png');  
       */
-      
-      let request;
 
-      if(method === 'POST') {
+  let request
 
-          request = await requestApi.post('/products/', form);
-          if(request.status === 201) Alert.alert('Product created', JSON.stringify(values));
+  if (method === "POST") {
+    request = await requestApi.post("/products/", form)
+    if (request.status === 201) Alert.alert("Product created", JSON.stringify(values))
 
-    } else { 
-
-        request = await requestApi.put(`/products/${id}/`, form);
-        if(request.status === 200) Alert.alert('Product updated', JSON.stringify(values));
-    }
-
-    (request.status === 200 || request.status === 201) && navigator.navigate('Products');
-
-    } catch(error) { 
-      
-      console.log(error.message);
-
-      Alert.alert(`Product code '${values['code']}' already exists. Please provide another one.`)
-
-    };
+  } else {
+    request = await requestApi.put(`/products/${id}/`, form)
+    if (request.status === 200) Alert.alert("Product updated", JSON.stringify(values))
   }
+  (request.status === 200 || request.status === 201) && navigator.navigate("Products")
+
+  } catch(error) {
+
+    console.log(error.message);
+
+    Alert.alert(`Product code '${values['code']}' already exists. Please provide another one.`)
+
+  };
+}

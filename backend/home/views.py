@@ -1,7 +1,10 @@
 from django.shortcuts import HttpResponse, render
-from home.models import Product
+from home.models import Product, ProductImage
 from rest_framework.viewsets import ModelViewSet
-from home.api.serializers import ProductSerializer
+from rest_framework.views import APIView
+from home.api.serializers import ProductSerializer, ProductImageSerializer
+from rest_framework.response import Response
+from rest_framework import status
 
 def home(request):
     packages = [
@@ -18,7 +21,28 @@ def home(request):
 class ProductViewSet(ModelViewSet):
 
     serializer_class = ProductSerializer
-
     def get_queryset(self):
         return Product.objects.all()
+
+class ProductImageViewSet(ModelViewSet):
+
+    serializer_class = ProductImageSerializer
+    def get_queryset(self):
+
+        return ProductImage.objects.filter(product = self.kwargs['id'])
+
+
+class ProductImagePost(APIView):
+    def post(self, request):
+
+        productId = request.data.get('id')
+        images = request.data.get('images')
+
+        for image in images:
+            ProductImage.objects.create(product = productId, image = image)
+
+        return Response('Imagenes creadas', status = status.HTTP_200_OK)
+
+
+
     

@@ -1,7 +1,9 @@
 import { PermissionsAndroid } from "react-native";
 import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 
-export const openPhoneAssets = async (mode, formik) => {
+export const openPhoneAssets = async (mode, formik, shouldRender) => {
+    
+    console.log('BEFORE=========', JSON.stringify(formik.values, null, 2));
 
     let options: any = {
       title: 'Select Image',
@@ -38,7 +40,7 @@ export const openPhoneAssets = async (mode, formik) => {
             };
     
             formik.setFieldValue('primaryImage', imageInfo);
-
+            shouldRender(prev => !prev);
           }
         );
     }
@@ -52,6 +54,7 @@ export const openPhoneAssets = async (mode, formik) => {
         };
 
         formik.setFieldValue('primaryImage', imageInfo);
+        shouldRender(prev => !prev);
       }
 
     )

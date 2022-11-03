@@ -1,9 +1,9 @@
-import React from 'react';
-import {View, ScrollView, TextInput, SafeAreaView, TextStyle, ViewStyle} from 'react-native';
+import React, {useState} from 'react';
+import {View, ScrollView, TextInput, SafeAreaView, TextStyle, ViewStyle, ImageStyle, Image, TouchableOpacity} from 'react-native';
 import {Formik} from 'formik'
 import { useNavigation } from '@react-navigation/native'
 import {Picker} from '@react-native-picker/picker';
-import { Button } from '../../../components';
+import { Button, Text } from '../../../components';
 import {submitData, openPhoneAssets, api} from '../../../helpers';
 import { color, spacing, typography } from '../../../theme';
 
@@ -46,6 +46,22 @@ const FOOTER_CONTENT: ViewStyle = {
     paddingVertical: spacing[4],
     paddingHorizontal: spacing[4],
 };
+const PREVIEW_CONTAINER : ViewStyle = {
+
+  justifyContent: 'center'
+};
+const PREVIEW : ViewStyle = {
+
+  marginLeft: '38%',
+  marginTop: '5%'
+};
+const IMAGE: ImageStyle = {
+
+  width: 100,
+  height: 100,
+  borderRadius: 10,
+};
+
 
 type FormProps = {
 
@@ -55,6 +71,8 @@ type FormProps = {
 
 export const FormComponent = (props: FormProps) => {
   
+  const [shouldPreviewRender, setShouldPreviewRender] = useState(false);
+
   const navigation = useNavigation();
   
   const initialValues = {
@@ -72,6 +90,13 @@ export const FormComponent = (props: FormProps) => {
     await submitData(values, 'POST', api, navigation);
     resetForm({values: ''});
   }
+
+  const deletePreview = (formik) => {
+    console.log('FORMIK=========', JSON.stringify(formik.values, null, 2))
+    setShouldPreviewRender(!shouldPreviewRender);
+    formik.setFieldValue('primaryImage', {});
+    console.log('AFTER=========', JSON.stringify(formik.values, null, 2))
+  };
 
   return (
 
@@ -146,7 +171,7 @@ export const FormComponent = (props: FormProps) => {
                       style={CONTINUE}
                       textStyle={CONTINUE_TEXT}
                       text='Open Camera'
-                      onPress={() => openPhoneAssets('camera', formikProps)}
+                      onPress={() => openPhoneAssets('camera', formikProps, setShouldPreviewRender)}
                     />
                 </View>
 
@@ -156,9 +181,26 @@ export const FormComponent = (props: FormProps) => {
                       style={CONTINUE}
                       textStyle={CONTINUE_TEXT}
                       text='Open Gallery'
-                      onPress={() => openPhoneAssets('gallery', formikProps)}
+                      onPress={() => openPhoneAssets('gallery', formikProps, setShouldPreviewRender)}
                     />
                 </View>
+
+                {(formikProps?.values?.primaryImage?.uri) && (
+                
+                  <View style={PREVIEW_CONTAINER}>
+                    <Text text='Image preview' style={[TEXT, {textAlign: 'center'}]}/>
+                    <TouchableOpacity 
+                      onLongPress={ () => deletePreview(formikProps)}
+                      style={PREVIEW}
+                    >
+                      <Image 
+                        source={{uri: formikProps.values.primaryImage.uri}}
+                        style={IMAGE}
+                      />
+
+                    </TouchableOpacity>
+                  </View>
+                )}
 
                 <View style={FOOTER_CONTENT}>
                     <Button
@@ -167,6 +209,7 @@ export const FormComponent = (props: FormProps) => {
                       textStyle={CONTINUE_TEXT}
                       text='Submit'
                       onPress={formikProps.submitForm}
+                      //onPress={() =>  console.log('AFTER=========', JSON.stringify(formikProps.values, null, 2))}
                     />
                 </View>
 

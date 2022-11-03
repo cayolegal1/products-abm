@@ -1,14 +1,16 @@
-import React, {FC, useContext, useState} from 'react';
-import { View, ScrollView, Image, TextStyle, ViewStyle, ImageStyle, Alert } from 'react-native';
+import React, {FC, useContext, useState, useCallback} from 'react';
+import { View, ScrollView, Image, TextStyle, ViewStyle, ImageStyle } from 'react-native';
 import { StackScreenProps } from "@react-navigation/stack"
+import { useFocusEffect } from '@react-navigation/native';
 import { observer } from "mobx-react-lite";
 import { NavigatorParamList } from "../../../navigators"
 import { UserGlobalContext } from '../../../models';
 import { GoBackButton, ModalComponent } from '.';
 import {Text, Header, GradientBackground} from '../../../components';
 import { spacing, color, typography } from '../../../theme';
+import {api} from '../../../helpers';
 
-const FULL: ViewStyle = { flex: 1 };
+const FULL: ViewStyle = { flex: 1, height: '100%' };
 const BOLD: TextStyle = { fontWeight: "bold" };
 const HEADER: TextStyle = {
     paddingTop: spacing[4],
@@ -55,6 +57,12 @@ const OTHER_IMAGES_TEXT: TextStyle = {
     textAlign: 'center'
 
 };
+const OTHER_IMAGES_CONTAINER : ViewStyle = {
+
+    ...IMAGE_CONTAINER,
+    marginVertical: '5%'
+
+}
 
 export const ProductDetailScreen: FC<StackScreenProps<NavigatorParamList, "productDetail">> = observer(
 
@@ -63,6 +71,8 @@ export const ProductDetailScreen: FC<StackScreenProps<NavigatorParamList, "produ
         const {user : {is_user, is_staff}} = useContext(UserGlobalContext);
 
         const {id, code, name, price, currency, description, primaryImage, state} : any = route.params;
+
+        const [images, setImages] = useState([]);
 
         const [modalVisible, setModalVisible] = useState(false);
 
@@ -87,6 +97,19 @@ export const ProductDetailScreen: FC<StackScreenProps<NavigatorParamList, "produ
         };
 
         const showModal = () => setModalVisible(!modalVisible)
+
+        const getImages = async () => {
+
+            const {data} : any = await api.get(`/products/images/${id}`);
+            const imagesResponse = data.results.map(img => img.image);
+            setImages(imagesResponse);
+        }
+
+        useFocusEffect(useCallback(() => {
+
+            getImages();
+
+        }, []))
 
         return(
 
@@ -128,6 +151,16 @@ export const ProductDetailScreen: FC<StackScreenProps<NavigatorParamList, "produ
                 {is_user  && (<Text text={`State: ${state}`} style={TEXT_PRODUCT} />)}
 
                 <Text text={`Other Images`} style={OTHER_IMAGES_TEXT} />
+
+                {images.map(img => (
+
+                    <View style={OTHER_IMAGES_CONTAINER} key={img}>
+                        <Image
+                          style={IMAGE}
+                          source={{uri: img}}
+                        />
+                    </View>
+                ))}
 
             </ScrollView>
         )

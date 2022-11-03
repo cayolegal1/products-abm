@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from home.models import Product
+from home.models import Product, ProductImage
 
 # class ProductSerializer(serializers.Serializer):
 #     Codigo = serializers.CharField(allow_blank=True, allow_null=True)
@@ -9,6 +9,12 @@ from home.models import Product
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    class Meta: 
+    class Meta:
         model = Product
         fields = '__all__'
+
+class ProductImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductImage
+        fields = '__all__'
+

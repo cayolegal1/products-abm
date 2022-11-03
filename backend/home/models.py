@@ -59,10 +59,9 @@ class Product(models.Model):
     state = models.CharField(choices = product_state_choices, max_length = 10)
     primaryImage = models.ImageField(upload_to = 'product-images', null = True)
 
-class Images(models.Model):
+class ProductImage(models.Model):
 
-    image = models.ForeignKey(Product, on_delete = models.SET_NULL, null = True)
-
-
+    product = models.ForeignKey(Product, on_delete = models.SET_NULL, null = True)
+    image = models.ImageField(upload_to = 'product-images', null = True)
 
 

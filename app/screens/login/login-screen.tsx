@@ -5,7 +5,6 @@ import { View, TextInput, Text } from 'react-native';
 import { Header, GradientBackground, Button } from '../../components';
 import { observer } from "mobx-react-lite";
 import { UserGlobalContext } from '../../models';
-import {customUsers} from '../../data';
 import {FULL, HEADER, HEADER_TITLE, INPUT, LOGIN_CONTENT, LOGIN, ERROR_TEXT, LOGIN_TEXT} from './styles'
 import { api } from '../../helpers';
 
@@ -20,8 +19,6 @@ export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "login">> = ob
         const Login = async () => {
 
             if(user.name !== '' && user.password !== '') {
-                
-                const userLogin: any = customUsers.find(u => u.name === user.name && u.password === user.password);
                 
                 try {
 
@@ -45,15 +42,6 @@ export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "login">> = ob
                     setUser({});
                     setError({isError: true, message: 'Wrong username or password'});
                 }
-
-
-                // if(userLogin !== undefined) {
-                //     setUser(userLogin);
-                //     return navigation.navigate('productList');
-                // }
-
-                // setUser({name: '', password: ''});
-                // setError({isError: true, message: 'Wrong username or password'});
                 
             } else setError({isError: true, message: 'Please provide user and pasword to login'});
 
