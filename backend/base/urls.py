@@ -26,14 +26,17 @@ from allauth.account.views import confirm_email
 from rest_framework import permissions, routers
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-from home import views as productViews
 from users.views import LoginView
-from home.views import ProductImagePost
+from home.views import upload_images
+# from home.views import ProductImagePost
+
+
 router = routers.DefaultRouter()
 
 urlpatterns = [
+    path("test/", upload_images, name='test'),
     path("products/", include("home.urls") ),
-    path("images/", ProductImagePost.as_view(), name='postimages'),
+    # path("images/", ProductImagePost.as_view(), name='postimages'),
     path("accounts/", include("allauth.urls")),
     path("api/v1/", include("home.api.v1.urls")),
     path("admin/", admin.site.urls),

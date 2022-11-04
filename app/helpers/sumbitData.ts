@@ -12,13 +12,19 @@ export const submitData = async (
   const form: FormData = new FormData()
 
   Object.keys(values).forEach((key) => {
-    if (key === "primaryImage" && values[key] .name)
-      return form.append(key, values[key], "image.png")
 
-    form.append(key, values[key])
+    if(key !== 'images') {
+
+      if (key === "primaryImage" && values[key] .name)
+        return form.append(key, values[key], "image.png")
+      
+      form.append(key, values[key])
+
+    }
   })
 
   /*En vez de esto
+
       form.append('code', values.code);
       form.append('name', values.name);
       form.append('description', values.description);
@@ -28,23 +34,44 @@ export const submitData = async (
       form.append('primaryImage', values.primaryImage, 'image.png');  
       */
 
-  let request
+  //@ts-ignore
+ 
+  let productRequest
 
   if (method === "POST") {
-    request = await requestApi.post("/products/", form)
-    if (request.status === 201) Alert.alert("Product created", JSON.stringify(values))
+
+    productRequest = await requestApi.post("/products/", form)
+
+    if (productRequest.status === 201) {
+
+        let imagesForm =  new FormData()
+
+        //@ts-ignore
+        values.images.map((img, key) => imagesForm.append(`${key}_image`, img, 'images.png'))
+
+        imagesForm.append(`productId`, productRequest.data.id)
+        
+        const imagesRequest = await requestApi.post("test/", imagesForm)
+
+        if(imagesRequest.status === 201) {
+  
+          Alert.alert('Product created', `Product ${values['name']} was successfully created`)
+        }
+    } 
 
   } else {
-    request = await requestApi.put(`/products/${id}/`, form)
-    if (request.status === 200) Alert.alert("Product updated", JSON.stringify(values))
+
+    productRequest = await requestApi.put(`/products/${id}/`, form)
+    if (productRequest.status === 200) Alert.alert("Product updated", JSON.stringify(values))
   }
-  (request.status === 200 || request.status === 201) && navigator.navigate("Products")
+  (productRequest.status === 200 || productRequest.status === 201) && navigator.navigate("Products")
 
   } catch(error) {
 
-    console.log(error.message);
+    console.log(error, error.message);
 
-    Alert.alert(`Product code '${values['code']}' already exists. Please provide another one.`)
+    //Alert.alert(`Product code '${values['code']}' already exists. Please provide another one.`)
+    Alert.alert(error)
 
   };
 }

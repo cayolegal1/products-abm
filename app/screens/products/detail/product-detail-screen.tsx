@@ -10,7 +10,7 @@ import {Text, Header, GradientBackground} from '../../../components';
 import { spacing, color, typography } from '../../../theme';
 import {api} from '../../../helpers';
 
-const FULL: ViewStyle = { flex: 1, height: '100%' };
+const FULL: ViewStyle = { flex: 1, backgroundColor: '#281b34' };
 const BOLD: TextStyle = { fontWeight: "bold" };
 const HEADER: TextStyle = {
     paddingTop: spacing[4],
@@ -48,6 +48,12 @@ const IMAGE: ImageStyle = {
     height: 300,
     borderRadius: 10 
 };
+const OTHER_IMAGE : ImageStyle = {
+
+    width: 150,
+    height: 150, 
+    borderRadius: 10
+};
 const OTHER_IMAGES_TEXT: TextStyle = {
 
 
@@ -60,7 +66,9 @@ const OTHER_IMAGES_TEXT: TextStyle = {
 const OTHER_IMAGES_CONTAINER : ViewStyle = {
 
     ...IMAGE_CONTAINER,
-    marginVertical: '5%'
+    marginVertical: '5%',
+    width: 150, 
+    height: 150
 
 }
 
@@ -100,7 +108,7 @@ export const ProductDetailScreen: FC<StackScreenProps<NavigatorParamList, "produ
 
         const getImages = async () => {
 
-            const {data} : any = await api.get(`/products/images/${id}`);
+            const {data} : any = await api.get(`/products/${id}/images/`);
             const imagesResponse = data.results.map(img => img.image);
             setImages(imagesResponse);
         }
@@ -151,16 +159,18 @@ export const ProductDetailScreen: FC<StackScreenProps<NavigatorParamList, "produ
                 {is_user  && (<Text text={`State: ${state}`} style={TEXT_PRODUCT} />)}
 
                 <Text text={`Other Images`} style={OTHER_IMAGES_TEXT} />
-
-                {images.map(img => (
+            <View style={{width: '90%', alignSelf: 'center', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between'}}>
+                {[...images, ...images, ...images].map(img => (
 
                     <View style={OTHER_IMAGES_CONTAINER} key={img}>
                         <Image
-                          style={IMAGE}
+                          resizeMode='contain'
+                          style={OTHER_IMAGE}
                           source={{uri: img}}
                         />
                     </View>
                 ))}
+            </View>
 
             </ScrollView>
         )

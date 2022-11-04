@@ -1,10 +1,12 @@
 from django.shortcuts import HttpResponse, render
+from django.views.decorators.csrf import csrf_protect
 from home.models import Product, ProductImage
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
-from home.api.serializers import ProductSerializer, ProductImageSerializer
+from home.api.serializers import ProductSerializer, ProductImagesSerializer, ProductImageSerializer
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.decorators import api_view
 
 def home(request):
     packages = [
@@ -26,23 +28,17 @@ class ProductViewSet(ModelViewSet):
 
 class ProductImageViewSet(ModelViewSet):
 
-    serializer_class = ProductImageSerializer
+    serializer_class = ProductImagesSerializer
     def get_queryset(self):
 
         return ProductImage.objects.filter(product = self.kwargs['id'])
 
+@api_view(['POST'])
+def upload_images(request):
+    if request.method == "POST":
+       for i in request.data:
+           if(i != 'productId'):
+                ProductImage.objects.create(product_id = request.data.get('productId'), image = request.data.get(i))
+       return Response('Created', status = status.HTTP_201_CREATED)
+    return Response('Not found', status=status.HTTP_400_BAD_REQUEST)
 
-class ProductImagePost(APIView):
-    def post(self, request):
-
-        productId = request.data.get('id')
-        images = request.data.get('images')
-
-        for image in images:
-            ProductImage.objects.create(product = productId, image = image)
-
-        return Response('Imagenes creadas', status = status.HTTP_200_OK)
-
-
-
-    

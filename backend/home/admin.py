@@ -18,7 +18,7 @@ class ProductImageAdmin(admin.ModelAdmin):
 
     def get_id(self, obj):
         return obj.product.id
-    
+
     get_id.short_description = 'Product ID'
 
 admin.site.register(ProductImage, ProductImageAdmin)
