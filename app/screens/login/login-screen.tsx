@@ -16,33 +16,45 @@ export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "login">> = ob
 
         const [error, setError] = useState({isError: false, message: ''});
 
-        const Login = async () => {
+        const Login = () => {
 
             if(user.name !== '' && user.password !== '') {
                 
-                try {
+                const credentials: object = {username: user.name, password: user.password};
+                api.post('/login/', credentials).then(({data}) => {
 
-                    const {data} = await api.post('/login/', {
-    
-                        username: user.name,
-                        password: user.password
-                    });
-                    
                     if(data) {
-
-                        setUser(data)
+                        setUser(data);
                         return navigation.navigate('productList');
+
+                    } else {
+
+                        setUser({});
+                        setError({isError: true, message: 'Wrong username or password'});
                     }
+                }).catch(error => setError({isError: true, message: error.message}))
+                // try {
 
-                    setUser({});
-                    setError({isError: true, message: 'Wrong username or password'})
+                //     const {data} = await api.post('/login/', {
+    
+                //         username: user.name,
+                //         password: user.password
+                //     });
+                    
+                //     if(data) {
 
-                } catch(error) {
+                //         setUser(data)
+                //         return navigation.navigate('productList');
+                //     }
 
-                    setUser({});
-                    setError({isError: true, message: 'Wrong username or password'});
-                }
-                
+                //     setUser({});
+                //     setError({isError: true, message: 'Wrong username or password'})
+
+                // } catch(error) {
+
+                //     setUser({});
+                //     setError({isError: true, message: 'Wrong username or password'});
+                // } 
             } else setError({isError: true, message: 'Please provide user and pasword to login'});
 
         }

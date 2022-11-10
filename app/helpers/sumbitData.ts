@@ -13,11 +13,11 @@ export const submitData = async (
 
   Object.keys(values).forEach((key) => {
 
-    if(key !== 'images') {
+    if(key !== 'images' ) {
 
       if (key === "primaryImage" && values[key] .name)
         return form.append(key, values[key], "image.png")
-      
+
       form.append(key, values[key])
 
     }
@@ -34,44 +34,47 @@ export const submitData = async (
       form.append('primaryImage', values.primaryImage, 'image.png');  
       */
 
-  //@ts-ignore
- 
-  let productRequest
-
   if (method === "POST") {
 
-    productRequest = await requestApi.post("/products/", form)
+    requestApi.post('/products/', form)
+    .then(res => {
 
-    if (productRequest.status === 201) {
-
-        let imagesForm =  new FormData()
+      if(res.status === 201) {
+        const imagesForm = new FormData();
 
         //@ts-ignore
-        values.images.map((img, key) => imagesForm.append(`${key}_image`, img, 'images.png'))
+        values.images.map((img, key) => imagesForm.append(`${key}_image`, img, 'images.png'));
+        imagesForm.append('productId', res.data.id);
 
-        imagesForm.append(`productId`, productRequest.data.id)
-        
-        const imagesRequest = await requestApi.post("test/", imagesForm)
+        requestApi.post('upload_images/', imagesForm)
+        .then(imgRes => {
 
-        if(imagesRequest.status === 201) {
-  
-          Alert.alert('Product created', `Product ${values['name']} was successfully created`)
-        }
-    } 
+          if(imgRes.status === 201) {
+            Alert.alert(`Product ${values['name']} created`);
+            return navigator.navigate('Products');
+          }
+
+        }).catch(error => console.log(error));
+      }
+    })
+    .catch(error => Alert.alert(error));
 
   } else {
 
-    productRequest = await requestApi.put(`/products/${id}/`, form)
-    if (productRequest.status === 200) Alert.alert("Product updated", JSON.stringify(values))
+    requestApi.put(`/products/${id}`, form)
+    .then(res => {
+
+      if(res.status === 200) {
+        Alert.alert("Product updated", JSON.stringify(values));
+        return navigator.navigate('Products')
+      }
+      
+    }).catch(error => Alert.alert(error));
+
   }
-  (productRequest.status === 200 || productRequest.status === 201) && navigator.navigate("Products")
 
   } catch(error) {
-
     console.log(error, error.message);
-
-    //Alert.alert(`Product code '${values['code']}' already exists. Please provide another one.`)
     Alert.alert(error)
-
   };
 }

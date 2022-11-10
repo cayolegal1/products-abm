@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { View, SafeAreaView, TextInput, TextStyle, ViewStyle } from 'react-native';
+import { View, SafeAreaView, TextInput, TextStyle, ViewStyle, Image, TouchableOpacity, ImageStyle } from 'react-native';
 import { Formik } from 'formik';
 import { useNavigation } from '@react-navigation/native'
 import { Picker } from '@react-native-picker/picker';
-import { Button } from '../../../components'
+import { Button, Text } from '../../../components'
 import {submitData, openPhoneAssets, api} from '../../../helpers';
 import { color, spacing, typography } from '../../../theme';
 
@@ -46,6 +46,21 @@ const FOOTER_CONTENT: ViewStyle = {
   paddingVertical: spacing[4],
   paddingHorizontal: spacing[4],
 };
+const PREVIEW_CONTAINER : ViewStyle = {
+
+  justifyContent: 'center'
+};
+const PREVIEW : ViewStyle = {
+
+  marginLeft: '38%',
+  marginTop: '5%'
+};
+const IMAGE: ImageStyle = {
+
+  width: 100,
+  height: 100,
+  borderRadius: 10,
+};
 
 type EditProps = {
 
@@ -64,6 +79,9 @@ export const EditFormComponent= ({id, code, name,  description, currency, price,
   const [stateProduct, setStateProduct] = useState(state);
 
   const navigation = useNavigation();
+
+  //PENDIENTE
+  const deletePreview = (formik) => formik.setFieldValue('primaryImage', {});
 
   return (
     
@@ -134,25 +152,49 @@ export const EditFormComponent= ({id, code, name,  description, currency, price,
               </Picker>
 
               <SafeAreaView style={{marginTop: '3%'}}>
-                <View style={FOOTER_CONTENT}>
+                <View style={{flexDirection: 'row'}}>
+                  <View style={FOOTER_CONTENT}>
+                      <Button
+                        testID="next-screen-button"
+                        style={CONTINUE}
+                        textStyle={CONTINUE_TEXT}
+                        text='Open Camera'
+                        onPress={() => openPhoneAssets('camera', formikProps)}
+                      />
+                  </View>
+
+                  <View style={FOOTER_CONTENT}>
                     <Button
                       testID="next-screen-button"
                       style={CONTINUE}
                       textStyle={CONTINUE_TEXT}
-                      text='Open Camera'
-                      onPress={() => openPhoneAssets('camera', formikProps)}
+                      text='Open Gallery'
+                      onPress={() => openPhoneAssets('gallery', formikProps)}
                     />
+                  </View>
                 </View>
 
-                <View style={FOOTER_CONTENT}>
-                  <Button
-                    testID="next-screen-button"
-                    style={CONTINUE}
-                    textStyle={CONTINUE_TEXT}
-                    text='Open Gallery'
-                    onPress={() => openPhoneAssets('gallery', formikProps)}
-                  />
-                </View>
+                {!formikProps?.values?.primaryImage && (
+                  <Text text='Set your Product primary Image' style={[TEXT, {textAlign: 'center', fontSize: 12}]} />
+                )}
+                
+                {(formikProps?.values?.primaryImage) && (
+                
+                  <View style={[PREVIEW_CONTAINER]}>
+                    <TouchableOpacity 
+                      onLongPress={ () => deletePreview(formikProps)}
+                      style={PREVIEW}
+                    >
+                      <Image 
+                        source={{uri: formikProps.values.primaryImage}}
+                        style={IMAGE}
+                      />
+
+                    </TouchableOpacity>
+                  </View>
+                )}
+
+              </SafeAreaView>
 
                 <View style={FOOTER_CONTENT}>
                   <Button
@@ -163,8 +205,7 @@ export const EditFormComponent= ({id, code, name,  description, currency, price,
                     onPress={formikProps.submitForm}
                   />
                 </View>
-
-              </SafeAreaView>
+              
             </>  
           )}
 

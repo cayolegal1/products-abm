@@ -2,13 +2,13 @@ from django.contrib import admin
 from home.models import Product, ProductImage
 class ProductAdmin(admin.ModelAdmin):
     
-    list_display = ['code', 'name', 'description' ]
+    list_display = ['id', 'code', 'name', 'description' ]
 
 admin.site.register(Product, ProductAdmin)
 
 
 class ProductImageAdmin(admin.ModelAdmin):
-    list_display = ['get_id', 'get_name', 'image']
+    list_display = ['get_id', 'get_name','image']
 
     def get_name(self, obj):
         return obj.product.name

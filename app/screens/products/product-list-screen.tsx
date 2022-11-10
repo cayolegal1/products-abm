@@ -1,12 +1,13 @@
 import React, {FC, useContext, useEffect, useState, useCallback} from 'react';
 import {DrawerScreenProps} from '@react-navigation/drawer';
-import { TextStyle, ViewStyle, Image, ScrollView, TouchableOpacity, ImageStyle } from 'react-native';
+import { TextStyle, ViewStyle, Image, ScrollView, TouchableOpacity, ImageStyle, Alert } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { observer } from "mobx-react-lite";
 import {Text, Header, GradientBackground, Card} from '../../components';
 import { UserGlobalContext } from '../../models';
 import { NavigatorParamListDrawer } from '../../navigators';
 import { spacing, color, typography } from '../../theme';
+import {api} from '../../helpers';
 
 const FULL: ViewStyle = { 
     flex: 1
@@ -102,21 +103,9 @@ export const ProductListScreen: FC<DrawerScreenProps<NavigatorParamListDrawer, "
 
         const toggleDrawer = () => navigation.toggleDrawer();
 
-        const setData = async () => {
-            
-            try {
-
-                const {results} = await (await fetch('http://192.168.183.11:8000/products')).json();
-
-                setProducts(results)
-
-            } catch(error) {
-
-                console.log(error.message)
-            }
-        };
-
-        
+        const setData = () => api.get('/products/')
+                              .then(({data}) => setProducts(data.results))
+                              .catch(error => Alert.alert(error.message)); 
 
         useFocusEffect(useCallback(() => {
 

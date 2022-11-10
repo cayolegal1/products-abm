@@ -1,4 +1,10 @@
-{
+{ "resolutions": {
+  "@types/react": "^17",
+  "@types/react-dom": "^17",
+  "@expo/config-plugins": "~5.0.0",
+  "@expo/prebuild-config": "~5.0.0",
+  "expo-modules-autolinking": "0.10.1"
+ },
   "name": "base-project",
   "version": "0.0.1",
   "private": true,
@@ -117,10 +123,6 @@
     "ts-jest": "26",
     "typescript": "4.7.3",
     "webpack": "4"
-  },
-  "resolutions": {
-    "@types/react": "^17",
-    "@types/react-dom": "^17"
   },
   "prettier": {
     "printWidth": 100,

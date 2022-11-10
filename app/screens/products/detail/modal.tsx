@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Modal, ViewStyle, Pressable, Text, TextStyle, Alert } from 'react-native';
 import {useNavigation} from '@react-navigation/native'
-import axios from 'axios';
 import { color } from '../../../theme';
+import {api} from '../../../helpers';
 
 const MODAL_CONTAINER : ViewStyle = {
 
@@ -57,23 +57,21 @@ export const ModalComponent = ({modalVisible, setModalVisible, id, name} : Modal
 
     const navigation = useNavigation();
 
-    const deleteProduct = async () => {
+    const deleteProduct = () => {
 
-        const requestDelete = await axios({
+        api.delete(`/products/${id}/`)
+        .then(res => {
 
-            baseURL: `http://192.168.183.11:8000/products/${id}/`,
-            method: 'DELETE'
-        });
-
-        if(requestDelete.status === 204) {
-
-            Alert.alert(`Product ${name} deleted successfully!`)
-            navigation.goBack();
-        }
+            if(res.status === 204) {
+                Alert.alert(`Product ${name} deleted successfully`);
+                navigation.goBack();
+            }
+            
+        }).catch(error => Alert.alert(error.message))
     };
+
   return (
     <View style={MODAL_CONTAINER}>
-
         <Modal 
           animationType='slide'
           transparent

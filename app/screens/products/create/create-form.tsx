@@ -69,12 +69,11 @@ const OTHER_PREVIEW_CONTAINER : ViewStyle = {
   flexDirection: 'row',
   flexWrap: 'wrap'
 };
-
 const OTHER_IMAGES_PREVIEW : ViewStyle = {
 
   marginLeft: '5%',
   marginTop: '5%'
-}
+};
 
 
 type FormProps = {
@@ -88,7 +87,7 @@ export const FormComponent = (props: FormProps) => {
   const navigation = useNavigation();
   
   const initialValues = {
-    code: '1881818181',
+    code: Date.now().toString(),
     name: 'kkkk', 
     description: 'llll', 
     currency: 'pyg', 
@@ -204,10 +203,12 @@ export const FormComponent = (props: FormProps) => {
 
                 </View>
 
+                {/* @ts-ignore */}
                 {!formikProps?.values?.primaryImage?.uri && (
                   <Text text='Set your Product primary Image' style={[TEXT, {textAlign: 'center', fontSize: 12}]}/>
                 )}
-
+                
+                {/* @ts-ignore */}
                 {(formikProps?.values?.primaryImage?.uri) && (
                 
                   <View style={[PREVIEW_CONTAINER]}>

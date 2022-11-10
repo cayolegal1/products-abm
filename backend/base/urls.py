@@ -34,7 +34,7 @@ from home.views import upload_images
 router = routers.DefaultRouter()
 
 urlpatterns = [
-    path("test/", upload_images, name='test'),
+    path("upload_images/", upload_images, name='test'),
     path("products/", include("home.urls") ),
     # path("images/", ProductImagePost.as_view(), name='postimages'),
     path("accounts/", include("allauth.urls")),

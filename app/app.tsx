@@ -34,7 +34,7 @@ function App() {
 
   const [rootStore, setRootStore] = useState<RootStore | undefined>(undefined);
 
-  const [user, setUser] = useState<{name?: string; password?: string; is_staff?: boolean, is_user?: boolean}>({name: '', password: '', is_staff: false, is_user: false});
+  const [user, setUser] = useState<{name?: string; password?: string; is_staff?: boolean, is_user?: boolean}>({name: 'cayolegal', password: 'hola1606', is_staff: true, is_user: true});
 
   const {
     initialNavigationState,

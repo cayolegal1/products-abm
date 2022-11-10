@@ -1,5 +1,5 @@
 import React, {FC, useContext, useState, useCallback} from 'react';
-import { View, ScrollView, Image, TextStyle, ViewStyle, ImageStyle } from 'react-native';
+import { View, ScrollView, Image, TextStyle, ViewStyle, ImageStyle, Alert } from 'react-native';
 import { StackScreenProps } from "@react-navigation/stack"
 import { useFocusEffect } from '@react-navigation/native';
 import { observer } from "mobx-react-lite";
@@ -70,7 +70,17 @@ const OTHER_IMAGES_CONTAINER : ViewStyle = {
     width: 150, 
     height: 150
 
-}
+};
+const OTHER_IMAGES_VIEW : ViewStyle = {
+
+    width: '90%', 
+    alignSelf: 'center',
+    flexDirection: 'row',
+    flexWrap: 'wrap', 
+    justifyContent: 'space-between'
+};
+
+
 
 export const ProductDetailScreen: FC<StackScreenProps<NavigatorParamList, "productDetail">> = observer(
 
@@ -106,17 +116,17 @@ export const ProductDetailScreen: FC<StackScreenProps<NavigatorParamList, "produ
 
         const showModal = () => setModalVisible(!modalVisible)
 
-        const getImages = async () => {
+        const getImages = () => {
 
-            const {data} : any = await api.get(`/products/${id}/images/`);
-            const imagesResponse = data.results.map(img => img.image);
-            setImages(imagesResponse);
-        }
+            api.get(`/products/${id}/images/`)
+            .then(({data}) => {
+                const imagesResponse = data.results.map(img => img.image);
+                setImages(imagesResponse)
+            }).catch(error => Alert.alert(error)) 
+        };
 
         useFocusEffect(useCallback(() => {
-
             getImages();
-
         }, []))
 
         return(
@@ -159,18 +169,21 @@ export const ProductDetailScreen: FC<StackScreenProps<NavigatorParamList, "produ
                 {is_user  && (<Text text={`State: ${state}`} style={TEXT_PRODUCT} />)}
 
                 <Text text={`Other Images`} style={OTHER_IMAGES_TEXT} />
-            <View style={{width: '90%', alignSelf: 'center', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between'}}>
-                {[...images, ...images, ...images].map(img => (
 
-                    <View style={OTHER_IMAGES_CONTAINER} key={img}>
-                        <Image
-                          resizeMode='contain'
-                          style={OTHER_IMAGE}
-                          source={{uri: img}}
-                        />
-                    </View>
-                ))}
-            </View>
+                <View style={OTHER_IMAGES_VIEW}>
+
+                    { images.map(img => 
+                        (
+                            <View style={OTHER_IMAGES_CONTAINER} key={img}>
+                                <Image
+                                resizeMode='contain'
+                                style={OTHER_IMAGE}
+                                source={{uri: img}}
+                                />
+                            </View> 
+                        )
+                    )}
+                </View>
 
             </ScrollView>
         )
