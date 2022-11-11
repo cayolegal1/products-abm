@@ -1,0 +1,43 @@
+version: "3.7"
+
+services:
+#  frontend:
+#    build: ./frontend
+#    restart: unless-stopped
+
+  backend:
+    build: .
+    platform: linux/x86_64
+    environment:
+      - PORT=8000
+      - DATABASE_URL=postgres://postgres:<postgres_pwd>@postgres:5432/postgres
+    restart: unless-stopped
+    volumes:
+      - media-data:/opt/media
+      - ./:/opt/webapp/
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    networks:
+      - backend
+
+  postgres:
+    image: postgis/postgis:14-3.3
+    platform: linux/x86_64
+    environment:
+      POSTGRES_PASSWORD: <postgres_pwd>
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - backend
+
+volumes: 
+  postgres-data:
+  media-data:
+
+
+networks:
+  backend:

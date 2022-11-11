@@ -31,7 +31,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env.str("SECRET_KEY")
-
+CSRF_TRUSTED_ORIGINS = ['http://localhost:3000']
 ALLOWED_HOSTS = env.list("HOST", default=["*"])
 SITE_ID = 1
 
@@ -214,6 +214,7 @@ REST_FRAMEWORK = {
     # 'DEFAULT_FILTER_BACKENDS': (
     #     'django_filters.rest_framework.DjangoFilterBackend',
     # )
+    #"PERMISSION_CLASSES": "AllowAny"
 }
 
 SIMPLE_JWT = {

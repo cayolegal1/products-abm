@@ -1,12 +1,13 @@
 import { ApisauceInstance, create, ApiResponse } from "apisauce"
-import { getGeneralApiProblem } from "./api-problem"
 import { ApiConfig, DEFAULT_API_CONFIG } from "./api-config"
 import * as Types from "./api.types"
+import { ApiBase } from "./api-base"
 
 /**
  * Manages all requests to the API.
  */
-export class Api {
+export class Api extends ApiBase {
+
   /**
    * The underlying apisauce instance which performs the requests.
    */
@@ -23,7 +24,7 @@ export class Api {
    * @param config The configuration to use.
    */
   constructor(config: ApiConfig = DEFAULT_API_CONFIG) {
-    this.config = config
+    super(config)
   }
 
   /**
@@ -43,4 +44,10 @@ export class Api {
       },
     })
   }
+
+  async login(data: any): Promise<Types.SimplePostResult> {
+    return this.simple_post("/api/v1/login", data)
+  }
+
+
 }

@@ -1,5 +1,4 @@
-from django.shortcuts import HttpResponse, render
-from django.views.decorators.csrf import csrf_protect
+from django.shortcuts import render
 from home.models import Product, ProductImage
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
@@ -19,7 +18,6 @@ def home(request):
     }
     return render(request, 'home/index.html', context)
 
-
 class ProductViewSet(ModelViewSet):
 
     serializer_class = ProductSerializer
@@ -30,8 +28,17 @@ class ProductImageViewSet(ModelViewSet):
 
     serializer_class = ProductImagesSerializer
     def get_queryset(self):
-
         return ProductImage.objects.filter(product = self.kwargs['id'])
+
+class ProductImagePost(APIView):
+
+    serializer_class = ProductImagesSerializer
+    permission_classes = []
+    def post(self, request, *args, **kwargs):
+        for i in request.data:
+            if(i != 'productId'):
+                ProductImage.objects.create(product_id = request.data.get('productId'), image = request.data.get(i))
+        return Response('Created', status = status.HTTP_201_CREATED)
 
 @api_view(['POST'])
 def upload_images(request):

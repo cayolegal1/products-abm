@@ -1,4 +1,4 @@
-import { PermissionsAndroid } from "react-native";
+import { Alert, PermissionsAndroid } from "react-native";
 import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 
 export const openPhoneAssets = async (mode, formik, attribute?) => {
@@ -14,6 +14,7 @@ export const openPhoneAssets = async (mode, formik, attribute?) => {
         path: 'images',
       },
     };
+
 
     if(mode.includes('camera')) {
 
@@ -32,13 +33,18 @@ export const openPhoneAssets = async (mode, formik, attribute?) => {
 
           await launchCamera(options, (res) => {
 
+
+            if(res.didCancel) return console.log('Asset cancel')
+            if(res.errorCode) return Alert.alert(res.errorCode)
+            if(res.errorMessage) return Alert.alert(res.errorMessage)
+
             const imageInfo = {
               uri: res.assets[0].uri,
               type: res.assets[0].type,
               name: res.assets[0].fileName
             };
     
-            attribute === 'primary' 
+            return attribute === 'primary' 
             ? formik.setFieldValue('primaryImage', imageInfo)
             : formik.setFieldValue('images', [imageInfo, ...formik.values.images])
           }
@@ -47,16 +53,19 @@ export const openPhoneAssets = async (mode, formik, attribute?) => {
 
      return await launchImageLibrary(options, (res) => {
 
-        const imageInfo = {
+        if(res.didCancel) return console.log('Asset cancel')
+        if(res.errorCode) return Alert.alert(res.errorCode)
+        if(res.errorMessage) return Alert.alert(res.errorMessage)
+
+        const imageInfo  = {
           uri: res.assets[0].uri,
           type: res.assets[0].type,
           name: res.assets[0].fileName
-        };
+        }; 
 
-        attribute === 'primary' 
+        return attribute === 'primary' 
         ? formik.setFieldValue('primaryImage', imageInfo)
         : formik.setFieldValue('images', [imageInfo, ...formik.values.images])
-        console.log(formik.values.images)
       }
 
     )

@@ -23,22 +23,12 @@ export const submitData = async (
     }
   })
 
-  /*En vez de esto
-
-      form.append('code', values.code);
-      form.append('name', values.name);
-      form.append('description', values.description);
-      form.append('currency', values.currency);
-      form.append('price', values.price);
-      form.append('state', values.state);
-      form.append('primaryImage', values.primaryImage, 'image.png');  
-      */
 
   if (method === "POST") {
 
-    requestApi.post('/products/', form)
+    requestApi.post('products/', form)
     .then(res => {
-
+      console.log(res)
       if(res.status === 201) {
         const imagesForm = new FormData();
 
@@ -46,7 +36,7 @@ export const submitData = async (
         values.images.map((img, key) => imagesForm.append(`${key}_image`, img, 'images.png'));
         imagesForm.append('productId', res.data.id);
 
-        requestApi.post('upload_images/', imagesForm)
+        requestApi.post('/upload_images/', imagesForm)
         .then(imgRes => {
 
           if(imgRes.status === 201) {

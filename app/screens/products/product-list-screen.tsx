@@ -1,4 +1,4 @@
-import React, {FC, useContext, useEffect, useState, useCallback} from 'react';
+import React, {FC, useContext, useState, useCallback} from 'react';
 import {DrawerScreenProps} from '@react-navigation/drawer';
 import { TextStyle, ViewStyle, Image, ScrollView, TouchableOpacity, ImageStyle, Alert } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
@@ -55,6 +55,9 @@ export const ProductListScreen: FC<DrawerScreenProps<NavigatorParamListDrawer, "
     ({navigation}) => {
         
         const [products, setProducts] = useState([]);
+        // const rootStore = useStores()
+        // const {loginStore} = rootStore
+
 
         //@ts-ignore
         const {user: {name, is_user}, setUser} : any = useContext(UserGlobalContext);   

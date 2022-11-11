@@ -27,14 +27,14 @@ from rest_framework import permissions, routers
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from users.views import LoginView
-from home.views import upload_images
+from home.views import upload_images, ProductImagePost
 # from home.views import ProductImagePost
 
 
 router = routers.DefaultRouter()
 
 urlpatterns = [
-    path("upload_images/", upload_images, name='test'),
+    path("upload_images/", view=ProductImagePost.as_view(), name='test'),
     path("products/", include("home.urls") ),
     # path("images/", ProductImagePost.as_view(), name='postimages'),
     path("accounts/", include("allauth.urls")),

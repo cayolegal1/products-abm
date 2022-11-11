@@ -20,12 +20,6 @@ class ProductImageSerializer(serializers.ModelSerializer):
 
 class ProductImagesSerializer(serializers.ModelSerializer):
 
-    product = serializers.PrimaryKeyRelatedField(read_only = True)
-    # image = serializers.ListField(
-    #     child=serializers.ImageField()
-    # )
-
-    #images = serializers.ImageField()
     class Meta:
         model = ProductImage
         fields = ['id', 'product', 'image']
